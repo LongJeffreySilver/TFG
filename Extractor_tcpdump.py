@@ -16,8 +16,8 @@ class Extractor_tcpdump:
                 return [ip,1]
         return ["",0]
 
-    def rellenarListaTargetTCPdump(self,controladorFicheros,listaIPPrivadas,conjuntoTarget):
-        ficheroEntrada = controladorFicheros.abrirFichero("/home/kali/Escritorio/Ficheros_de_entrada/entrada_tcpdump.txt","n")
+    def rellenarListaTargetTCPdump(self,controladorFicheros,listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada):
+        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada + "/entrada_tcpdump.txt","n")
         linea = ficheroEntrada.readline()
 
         while linea != "":

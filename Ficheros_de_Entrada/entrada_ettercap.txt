@@ -1,0 +1,50 @@
+
+[1mettercap 0.8.3.1[0m copyright 2001-2020 Ettercap Development Team
+
+Listening on:
+  eth1 -> 08:00:27:47:89:2E
+	  192.168.1.70/255.255.255.0
+	  fe80::a00:27ff:fe47:892e/64
+
+SSL dissection needs a valid 'redir_command_on' script in the etter.conf file
+Ettercap might not work correctly. /proc/sys/net/ipv6/conf/eth1/use_tempaddr is not set to 0.
+Privileges dropped to EUID 65534 EGID 65534...
+
+  34 plugins
+  42 protocol dissectors
+  57 ports monitored
+28230 mac vendor fingerprint
+1766 tcp OS fingerprint
+2182 known services
+Lua: no scripts were specified, not starting up!
+
+Starting Unified sniffing...
+
+
+Text only Interface activated...
+Hit 'h' for inline help
+
+
+
+Hosts list:
+
+1)	192.168.1.1	98:97:D1:35:7B:D5
+2)	192.168.1.39	D8:CB:8A:73:76:24
+3)	192.168.1.44	1E:3B:F3:1E:A0:CB
+4)	fe80::8c:a9a3:eb30:10ab	D8:CB:8A:73:76:24
+5)	fe80::4025:35ff:fe0b:c656	00:26:86:00:00:00
+6)	fe80::5a20:59ff:fe86:1832	58:20:59:86:18:32
+7)	fe80::5ec1:d7ff:fef4:32a8	1E:3B:F3:F4:32:A8
+8)	fe80::61a2:25d4:69e2:dc33	58:20:59:86:0D:CA
+9)	fe80::9a97:d1ff:fe35:7bd5	98:97:D1:35:7B:D5
+10)	fe80::f63e:ff9e:a04d:5a4a	1E:3B:F3:1E:A0:CB
+11)	192.168.1.52	1E:3B:F3:F4:32:A8
+
+
+Closing text interface...
+
+
+Terminating ettercap...
+Lua cleanup complete!
+Unified sniffing was stopped.
+

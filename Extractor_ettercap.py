@@ -17,8 +17,8 @@ class Extractor_ettercap:
             version = "4"
         return [ipCortada,version]
 
-    def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas):
-        ficheroEntrada = controladorFicheros.abrirFichero("/home/kali/Escritorio/Ficheros_de_entrada/entrada_ettercap.txt","n")
+    def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas, rutaFicherosEntrada):
+        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada + "/entrada_ettercap.txt","n")
         linea = ficheroEntrada.readline()
         condicionHostList = 0
         conjuntoTarget= set()

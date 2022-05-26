@@ -1,14 +1,14 @@
 import csv
 
 from Vulnerabilidad import Vulnerabilidad
-#from googletrans import Translator #https://stackoverflow.com/questions/52455774/googletrans-stopped-working-with-error-nonetype-object-has-no-attribute-group
+from googletrans import Translator #https://stackoverflow.com/questions/52455774/googletrans-stopped-working-with-error-nonetype-object-has-no-attribute-group
 
 
 class Extractor_csv:
-    '''def traducir(self,cadena):
+    def traducir(self,cadena):
         translator = Translator() 
         cadena = translator.translate(cadena,dest ='es').text #traducir al castellano
-        return cadena'''
+        return cadena
 
     def arreglarCadena(self,cadena):
         cadenaSinEspacio = cadena.split() #Quitar varios espacios en blanco
@@ -16,11 +16,10 @@ class Extractor_csv:
         for palabra in cadenaSinEspacio:
                 cadena+=palabra + " "
         cadena = cadena.replace('\n', ' ')
-        return cadena #self.traducir(cadena)
+        return self.traducir(cadena)
 
-    def extraerCVS(self,controladorFicheros,conjuntoTarget):
-        ruta = "/home/kali/Escritorio/Ficheros_de_entrada/reporte_greenbone.csv"
-        ficheroCSV = controladorFicheros.abrirFichero(ruta, "r")
+    def extraerCVS(self,controladorFicheros,conjuntoTarget,rutaFicherosEntrada): 
+        ficheroCSV = controladorFicheros.abrirFichero(rutaFicherosEntrada + "reporte_greenbone.csv", "r")
 
         with ficheroCSV as csvfile: #El grande Dataset-Unicauca-Version2-87Atts.csv
             reader = csv.DictReader(csvfile)
@@ -52,7 +51,7 @@ class Extractor_csv:
                 descripcionSolucion = self.arreglarCadena(descripcionSolucion)
 
                 resultado = elemento['Specific Result']
-                #resultado = self.traducir(resultado)
+                resultado = self.traducir(resultado)
 
                 vulnerabilidad = Vulnerabilidad(ip,"",nombreVulnerabiliad,protocoloYpuerto,cvss,severidad,tipoSolucion,descripcionSolucion,resultado,resumen,cves)
                 for target in conjuntoTarget:

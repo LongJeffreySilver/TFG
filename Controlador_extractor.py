@@ -12,14 +12,14 @@ class Controlador_extractor:
         self.valoradorRiesgo = Valorador_riesgo()
 
 
-    def extraerCVS(self,controladorFicheros,conjuntoTarget):
-        return self.extractor_csv.extraerCVS(controladorFicheros,conjuntoTarget)
+    def extraerCVS(self,controladorFicheros,conjuntoTarget,rutaFicherosEntrada):
+        return self.extractor_csv.extraerCVS(controladorFicheros,conjuntoTarget,rutaFicherosEntrada)
     
-    def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas):
-        return self.extractor_ettercap.rellenarListaTargetEttercap(controladorFicheros,listaIPPrivadas)
+    def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas, rutaFicherosEntrada):
+        return self.extractor_ettercap.rellenarListaTargetEttercap(controladorFicheros,listaIPPrivadas, rutaFicherosEntrada)
     
-    def rellenarListaTargetTCPdump(self,controladorFicheros,listaIPPrivadas,conjuntoTarget):
-        return self.extractor_tcpdump.rellenarListaTargetTCPdump(controladorFicheros,listaIPPrivadas,conjuntoTarget)
+    def rellenarListaTargetTCPdump(self,controladorFicheros,listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada):
+        return self.extractor_tcpdump.rellenarListaTargetTCPdump(controladorFicheros,listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada)
 
     def valoracionRiesgo(self,conjuntoTarget):
         return self.valoradorRiesgo.valoracionRiesgo(conjuntoTarget)

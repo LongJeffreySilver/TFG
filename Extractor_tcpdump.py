@@ -17,7 +17,7 @@ class Extractor_tcpdump:
         return ["",0]
 
     def rellenarListaTargetTCPdump(self,controladorFicheros,listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada):
-        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada + "/entrada_tcpdump.txt","n")
+        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada,"n")
         linea = ficheroEntrada.readline()
 
         while linea != "":

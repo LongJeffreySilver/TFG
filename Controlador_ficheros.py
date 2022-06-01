@@ -68,14 +68,20 @@ class Controlador_ficheros:
         fichero.close()
 
     def escribirFicheroTarget(self,conjuntoTarget,ruta):
-        ficheroTarget = self.abrirFichero(ruta,'w')
+        ficheroTarget = self.abrirFichero(ruta + "conjunto_MAC;IP.txt",'w')
         for target in conjuntoTarget:
             ficheroTarget.write(target.mac + ";" + target.ip + "\n")
         self.cerrarFichero(ficheroTarget)
 
 
     def escribirIPs(self,conjuntoTarget,nombreFichero):
+        nombreFichero += "conjunto_IP.txt"
         ficheroIP = self.abrirFichero(nombreFichero,'w')
         for target in conjuntoTarget:
             ficheroIP.write(target.ip + "\n")
         self.cerrarFichero(ficheroIP)
+        return nombreFichero
+
+    def borrarFichero(fichero):
+        #hacer la llamada a rm -f fichero
+        a

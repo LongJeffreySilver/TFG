@@ -18,7 +18,7 @@ class Extractor_ettercap:
         return [ipCortada,version]
 
     def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas, rutaFicherosEntrada):
-        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada + "/entrada_ettercap.txt","n")
+        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada,"n")
         linea = ficheroEntrada.readline()
         condicionHostList = 0
         conjuntoTarget= set()

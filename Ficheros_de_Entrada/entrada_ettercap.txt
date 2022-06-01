@@ -39,6 +39,8 @@ Hosts list:
 9)	fe80::9a97:d1ff:fe35:7bd5	98:97:D1:35:7B:D5
 10)	fe80::f63e:ff9e:a04d:5a4a	1E:3B:F3:1E:A0:CB
 11)	192.168.1.52	1E:3B:F3:F4:32:A8
+12)	192.168.1.43	F3:1E:F3:F4:32:C5
+13)	192.168.1.200	20:59:F3:35:7B:C5
 
 
 Closing text interface...

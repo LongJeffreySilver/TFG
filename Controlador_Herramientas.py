@@ -27,10 +27,10 @@ class Controlador_Herramientas:
 
     def lanzarTcpdump(rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
         #tcpdump -qns 0 -e -r traza 
-        #Genera un fichero en rutaFicherosEntrada
+        #Genera un fichero para la salida de Kismet + Tcpdump
         rutaFichero = rutaFicherosEntrada + "/Entrada_tcpdump.txt"
         fichero = open(rutaFichero,"w")
-
+        #Escribir fichero
         fichero.close()
         return rutaFichero
 
@@ -39,10 +39,10 @@ class Controlador_Herramientas:
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
 
-    def analisisDeRiesgos(controladorFicheros,ficheroListaIPs):
+    def analisisDeRiesgos(ficheroListaIPs):
         greenBone = GreenBone()
         
-        idTargets = greenBone.crearTargets(controladorFicheros,ficheroListaIPs)
+        idTargets = greenBone.crearTargets(ficheroListaIPs)
         idTask = greenBone.crearTask(idTargets)
         greenBone.lanzarTask(idTask)
         informe = greenBone.descargarReporte() #devolver la ruta del fichero CSV si ha habido exito

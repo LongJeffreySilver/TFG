@@ -5,20 +5,16 @@ from Generador_informe import Generador_informe
 from Controlador_Herramientas import Controlador_Herramientas
 from Valorador_riesgo import Valorador_riesgo
 
-#Variables
-listaIPPrivadas = ["10.0","172.16","192.168","169.254"]
-
 #Creacion y gestion de rutas de ficheros y carpetas
 controladorFicheros = Controlador_ficheros()
 rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] matriz de riesgos
 
-#Lanzar herramientas -> Lo mas seguro es que estoy cambie por un controlador de herramientas
+#Lanzar el escaner de red cableado e inalambrico
 lanzador = Controlador_Herramientas
 ficherosEntrada = lanzador.escanearRed(rutasCarpetas[0])
 
-
-
 #Se rellenan la lista de IPs privadas en IPv4 e IPv6
+listaIPPrivadas = ["10.0","172.16","192.168","169.254"]
 controladorFicheros.rellenarListaPrivadaIPv4(listaIPPrivadas)
 controladorFicheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
 
@@ -36,7 +32,7 @@ controladorFicheros.borrarFichero(ficherosEntrada[1])
 controladorFicheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
 ficheroListaIPs = controladorFicheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
 
-lanzador.analisisDeRiesgos(controladorFicheros,ficheroListaIPs) #Escribir ruta despues y devolver ruta del fichero CSV
+lanzador.analisisDeRiesgos(ficheroListaIPs) #Escribir ruta despues y devolver ruta del fichero CSV
 
 #Se extrae la informacion del reporte CSV generado por Greenbone
 conjuntoTarget = controladorExtractor.extraerCVS(controladorFicheros,conjuntoTarget,rutasCarpetas[0])

@@ -60,29 +60,29 @@ class Controlador_ficheros:
                 completo = basePrimero + segundo
                 listaIPPrivadas.append(completo)
 
-    def abrirFichero(self,nombre,permiso): #w para escribir, r para leer y n si no se quiere permiso
+    '''def abrirFichero(self,nombre,permiso): #w para escribir, r para leer y n si no se quiere permiso
         if permiso == "n":
             fichero = open(nombre)
         else:
             fichero = open(nombre,permiso)
-        return fichero
+        return fichero'''
     
-    def cerrarFichero(self,fichero):
-        fichero.close()
+    '''def cerrarFichero(self,fichero):
+        fichero.close()'''
 
-    def escribirFicheroTarget(self,conjuntoTarget,ruta):
-        ficheroTarget = self.abrirFichero(ruta + "conjunto_MAC;IP.txt",'w')
+    def escribirFicheroTarget(conjuntoTarget,ruta):
+        ficheroTarget = open(ruta + "/Conjunto_MAC;IP.txt",'w')
         for target in conjuntoTarget:
             ficheroTarget.write(target.mac + ";" + target.ip + "\n")
-        self.cerrarFichero(ficheroTarget)
+        ficheroTarget.close()
 
 
-    def escribirIPs(self,conjuntoTarget,nombreFichero):
-        nombreFichero += "conjunto_IP.txt"
-        ficheroIP = self.abrirFichero(nombreFichero,'w')
+    def escribirIPs(conjuntoTarget,nombreFichero):
+        nombreFichero += "/Conjunto_IP.txt"
+        ficheroIP = open(nombreFichero,'w')
         for target in conjuntoTarget:
             ficheroIP.write(target.ip + "\n")
-        self.cerrarFichero(ficheroIP)
+        ficheroIP.close()
         return nombreFichero
 
     def borrarFichero(rutaFichero):

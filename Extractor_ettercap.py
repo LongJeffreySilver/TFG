@@ -17,8 +17,8 @@ class Extractor_ettercap:
             version = "4"
         return [ipCortada,version]
 
-    def rellenarListaTargetEttercap(self,controladorFicheros,listaIPPrivadas, rutaFicherosEntrada):
-        ficheroEntrada = controladorFicheros.abrirFichero(rutaFicherosEntrada,"n")
+    def rellenarListaTargetEttercap(self,listaIPPrivadas, rutaFicherosEntrada):
+        ficheroEntrada = open(rutaFicherosEntrada,"r")
         linea = ficheroEntrada.readline()
         condicionHostList = 0
         conjuntoTarget= set()
@@ -48,5 +48,5 @@ class Extractor_ettercap:
             
             linea = ficheroEntrada.readline()
             
-        controladorFicheros.cerrarFichero(ficheroEntrada)
+        ficheroEntrada.close()
         return conjuntoTarget

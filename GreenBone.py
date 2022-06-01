@@ -9,8 +9,8 @@ class GreenBone:
         # delete_target(target_id, *, ultimate=True) #Ultimate es para eliminar por completo incluso del cubo de basura
         a
 
-    def crearTargets(controladorFicheros,rutaFichero):
-        ficheroEntrada = controladorFicheros.abrirFichero(rutaFichero,"r")
+    def crearTargets(rutaFichero):
+        ficheroEntrada = open(rutaFichero,"r")
         linea = ficheroEntrada.readline()
         listaTarget = list()
         while linea != "": #recorre hasta el final del fichero txt

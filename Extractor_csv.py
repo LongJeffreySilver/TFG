@@ -18,8 +18,8 @@ class Extractor_csv:
         cadena = cadena.replace('\n', ' ')
         return cadena # self.traducir(cadena)
 
-    def extraerCVS(self,controladorFicheros,conjuntoTarget,rutaFicherosEntrada): 
-        ficheroCSV = controladorFicheros.abrirFichero(rutaFicherosEntrada + "reporte_greenbone.csv", "r")
+    def extraerCVS(self,conjuntoTarget,rutaFicherosEntrada): 
+        ficheroCSV = open(rutaFicherosEntrada + "/Reporte_greenbone.csv", "r")
 
         with ficheroCSV as csvfile: #El grande Dataset-Unicauca-Version2-87Atts.csv
             reader = csv.DictReader(csvfile)
@@ -73,5 +73,5 @@ class Extractor_csv:
                 "\tCVEs: " + cves + "\n "
                 )'''
 
-        controladorFicheros.cerrarFichero(ficheroCSV)
+        ficheroCSV.close()
         return conjuntoTarget

@@ -18,8 +18,8 @@ class Extractor_csv:
         cadena = cadena.replace('\n', ' ')
         return cadena # self.traducir(cadena)
 
-    def extraerCVS(self,conjuntoTarget,rutaFicherosEntrada): 
-        ficheroCSV = open(rutaFicherosEntrada + "/Reporte_greenbone.csv", "r")
+    def extraerCVS(self,conjuntoTarget,rutaFicherosEntrada, rutaInforme): 
+        ficheroCSV = open(rutaFicherosEntrada + rutaInforme, "r") #"/Reporte_greenbone.csv"
 
         with ficheroCSV as csvfile: #El grande Dataset-Unicauca-Version2-87Atts.csv
             reader = csv.DictReader(csvfile)
@@ -59,19 +59,6 @@ class Extractor_csv:
                         vulnerabilidad.hostname = target.mac
                         target.listaVulnerabilidades.append(vulnerabilidad)
                         break
-
-                ''' Guardar esto para tener en cuenta el formato que se le quiere dar de cara a futuro
-                print("***********************************" + "IP: " + ip + "***********************************" + "\n "
-                "\tNombre de la vulnerabiliad: " + nombreVulnerabiliad + "\n " +
-                "\tProtocolo y puerto: " + protocoloYpuerto + "\n " +
-                "\tPuntuacion: " + cvss + "\n " +
-                "\tSeveridad: " + severidad + "\n " +
-                "\tSolucion: " + tipoSolucion + "\n " +
-                "\t\t" + descripcionSolucion + "\n " +
-                "\tResultado: \n" + resultado + "\n " +
-                "\tResumen: \n" + resumen + "\n " +
-                "\tCVEs: " + cves + "\n "
-                )'''
-
+                    
         ficheroCSV.close()
         return conjuntoTarget

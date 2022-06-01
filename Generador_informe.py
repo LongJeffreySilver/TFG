@@ -32,5 +32,5 @@ class Generador_informe:
                 })
 
         #Guardar informe
-        with open(rutaSalida +'informe.json', 'w') as file:
+        with open(rutaSalida +'/Informe.json', 'w') as file:
             json.dump(informe, file, indent=4)

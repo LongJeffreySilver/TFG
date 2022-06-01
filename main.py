@@ -10,8 +10,8 @@ controladorFicheros = Controlador_ficheros()
 rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] matriz de riesgos
 
 #Lanzar el escaner de red cableado e inalambrico
-lanzador = Controlador_Herramientas
-ficherosEntrada = lanzador.escanearRed(rutasCarpetas[0])
+controladorHerramientas = Controlador_Herramientas
+ficherosEntrada = controladorHerramientas.escanearRed(rutasCarpetas[0])
 
 #Se rellenan la lista de IPs privadas en IPv4 e IPv6
 listaIPPrivadas = ["10.0","172.16","192.168","169.254"]
@@ -21,10 +21,10 @@ controladorFicheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
 #Se crea un conjunto de target (IP,MAC,Version) con los 2 ficheros de entradas de herramientas diferentes
 controladorExtractor = Controlador_extractor()
 conjuntoTarget = set()
-conjuntoTarget = controladorExtractor.rellenarListaTargetEttercap(controladorFicheros,listaIPPrivadas, ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
-conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(controladorFicheros,listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
+conjuntoTarget = controladorExtractor.rellenarListaTargetEttercap(listaIPPrivadas, ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
+conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
 
-#Para no ocupar espacio y que se acumule siempre, se van a ir borrando los ficheros que ya no se utilizan
+#Para no ocupar espacio y que se acumulenb siempre ficheros, se van a ir borrando que ya no se utilizan
 controladorFicheros.borrarFichero(ficherosEntrada[0])
 controladorFicheros.borrarFichero(ficherosEntrada[1])
 
@@ -32,10 +32,10 @@ controladorFicheros.borrarFichero(ficherosEntrada[1])
 controladorFicheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
 ficheroListaIPs = controladorFicheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
 
-lanzador.analisisDeRiesgos(ficheroListaIPs) #Escribir ruta despues y devolver ruta del fichero CSV
+rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs) #Escribir ruta despues y devolver ruta del fichero CSV
 
 #Se extrae la informacion del reporte CSV generado por Greenbone
-conjuntoTarget = controladorExtractor.extraerCVS(controladorFicheros,conjuntoTarget,rutasCarpetas[0])
+conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
 valoradorRiesgo = Valorador_riesgo()

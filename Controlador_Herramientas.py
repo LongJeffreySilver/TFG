@@ -10,10 +10,8 @@ class Controlador_Herramientas:
     def analisisCableado(rutaFicherosEntrada): #sudo ettercap -Tqz -s 's(30)lqq' -i eth1 > /home/kali/Desktop/lista.txt 
         rutaFichero = rutaFicherosEntrada + "/Entrada_ettercap.txt"
         fichero = open(rutaFichero,"w")
-        result = subprocess.Popen(["ls", "-l"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        result.wait()
-        print(result.stdout)
-        fichero.write(result.stdout)
+        proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "'s(30)lqq'", "-i", "eth1"], stdout=fichero) #Ojo porque hay que hacerlo con sudo
+        proceso.wait()
         fichero.close()
         return rutaFichero
     
@@ -22,7 +20,11 @@ class Controlador_Herramientas:
         #Generar la traza para pasarsela a TCPdump
         traza = rutaFicherosEntrada + "/Traza_kismet.pcap"
         #kismet wlan0 generar_traza traza
-
+        fichero = open(traza,"w")
+        proceso = subprocess.Popen(["kismet", "wlan0", "comando para guardar traza", traza]) #NO hacerlo con sudo a poder ser
+        #Si no funciona bien esto, mirar la respuesta a este hilo https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
+        proceso.wait()
+        fichero.close()
         self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
 
     def lanzarTcpdump(rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
@@ -30,7 +32,7 @@ class Controlador_Herramientas:
         #Genera un fichero para la salida de Kismet + Tcpdump
         rutaFichero = rutaFicherosEntrada + "/Entrada_tcpdump.txt"
         fichero = open(rutaFichero,"w")
-        #Escribir fichero
+        proceso = subprocess.Popen(["tcpdump", "-qns", "0", "e" , "-r", traza], stdout=fichero)
         fichero.close()
         return rutaFichero
 

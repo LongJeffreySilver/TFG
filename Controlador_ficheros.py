@@ -1,3 +1,6 @@
+import subprocess
+
+
 class Controlador_ficheros:
    
     def ocho():
@@ -82,6 +85,28 @@ class Controlador_ficheros:
         self.cerrarFichero(ficheroIP)
         return nombreFichero
 
-    def borrarFichero(fichero):
+    def borrarFichero(rutaFichero):
         #hacer la llamada a rm -f fichero
-        a
+        proceso = subprocess.run(["rm", "-f",rutaFichero])
+    
+    def creacionCarpetas():
+        #Ruta actual
+        pwd = proceso.stdout.splitlines()
+        proceso = subprocess.run(["pwd"],capture_output=True,text=True)
+
+        #Creacion de nombres de ficheros
+        fichEntrada = pwd[0] + "/Ficheros_de_Entrada"
+        fichSalida = pwd[0] + "/Ficheros_de_Salida"
+        fichMatrices = pwd[0] + "/Matrices_de_Riesgos"
+
+        listaCreacion = list()
+        listaCreacion.append(fichEntrada)
+        listaCreacion.append(fichSalida)
+        listaCreacion.append(fichMatrices)
+
+        #Por cada fichero se comprueba si existe. Si NO existe se crea
+        for fichero in listaCreacion:
+            proceso = subprocess.run(['test', '-d', fichero]).returncode == 0 #0 si existe, !=0 si no
+            if proceso: #Si no existe lo crea
+                subprocess.run(["mkdir",fichero])
+        return listaCreacion

@@ -43,10 +43,19 @@ class Controlador_Herramientas:
 
     def analisisDeRiesgos(ficheroListaIPs):
         greenBone = GreenBone()
+        #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos
+        proceso = subprocess.run(["whoami"],capture_output=True,text=True)
+        whoami = proceso.stdout.splitlines()
+        proceso = subprocess.run(["sudo", "usermod", "-a", "-G", "_gvm", whoami[0]])
+ 
+        #lanzar un script por cada llamada a una funcion                
         
         idTargets = greenBone.crearTargets(ficheroListaIPs)
         idTask = greenBone.crearTask(idTargets)
         greenBone.lanzarTask(idTask)
         informe = greenBone.descargarReporte() #devolver la ruta del fichero CSV si ha habido exito
         greenBone.borrarTargets(idTargets) #Se borran para no ocupar espacio en cada analisis
+
+        #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
+        subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         return informe

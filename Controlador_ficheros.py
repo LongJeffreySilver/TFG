@@ -91,8 +91,8 @@ class Controlador_ficheros:
     
     def creacionCarpetas():
         #Ruta actual
-        pwd = proceso.stdout.splitlines()
         proceso = subprocess.run(["pwd"],capture_output=True,text=True)
+        pwd = proceso.stdout.splitlines()
 
         #Creacion de nombres de ficheros
         fichEntrada = pwd[0] + "/Ficheros_de_Entrada"

@@ -16,7 +16,9 @@ class GreenBone:
         while linea != "": #recorre hasta el final del fichero txt
             listaTarget.append(linea)
             linea = ficheroEntrada.readline()
+            #Llamar con subprocess a un gvm-script con el script que usa el gmp -> guiarme con https://github.com/greenbone/gvm-tools/blob/main/scripts/create-targets-from-host-list.gmp.py
 
+            # Usar lo de abajo como script
             '''
             Ejemplo de como se lanza
             >>> resp = gmp.create_target(name="TARGETNAME3", make_unique=True, hosts=listaTarget)
@@ -66,4 +68,5 @@ class GreenBone:
         #gmp.start_task(idTask)
         a
     def descargarReporte():
+        #hay una funcion get_report
         a

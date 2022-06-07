@@ -1,6 +1,10 @@
+import subprocess
+
+
 class GreenBone:
     #https://python-gvm.readthedocs.io/en/latest/api/gmpv214.html#gvm.protocols.gmpv214.Gmp.send_command 
     #Se pueden hacer uso de scripts previamente creados en python https://github.com/greenbone/gvm-tools/tree/main/scripts
+    #Llamar con subprocess a un gvm-script con el script que usa el gmp -> guiarme con https://github.com/greenbone/gvm-tools/blob/main/scripts/create-targets-from-host-list.gmp.py
     
     '''gvm-pyshell \
     --gmp-username webadmin --gmp-password kennwort'''
@@ -10,16 +14,11 @@ class GreenBone:
         a
 
     def crearTargets(rutaFichero):
-        ficheroEntrada = open(rutaFichero,"r")
-        linea = ficheroEntrada.readline()
-        listaTarget = list()
-        while linea != "": #recorre hasta el final del fichero txt
-            listaTarget.append(linea)
-            linea = ficheroEntrada.readline()
-            #Llamar con subprocess a un gvm-script con el script que usa el gmp -> guiarme con https://github.com/greenbone/gvm-tools/blob/main/scripts/create-targets-from-host-list.gmp.py
+        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", "/home/kali/Desktop/TFG-1/create-targets-from-host-list.gmp.py", "127.0.0.1:9392", rutaFichero]) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"
+        return idTargets
 
-            # Usar lo de abajo como script
-            '''
+        # Usar lo de abajo como script
+        '''
             Ejemplo de como se lanza
             >>> resp = gmp.create_target(name="TARGETNAME3", make_unique=True, hosts=listaTarget)
             >> from gvm.xml import pretty_print
@@ -37,7 +36,7 @@ class GreenBone:
             '''
             
 
-        return idTargets
+        
     
     def crearTask(idTargets):
 

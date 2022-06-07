@@ -43,6 +43,8 @@ class Controlador_Herramientas:
 
     def analisisDeRiesgos(ficheroListaIPs):
         greenBone = GreenBone()
+        #¿Lanzar gvm-start? Mirar si lo tengo que lanzar antes o si directamente se me conecta solo al usar la api
+
         #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos
         proceso = subprocess.run(["whoami"],capture_output=True,text=True)
         whoami = proceso.stdout.splitlines()

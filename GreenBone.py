@@ -14,29 +14,9 @@ class GreenBone:
         a
 
     def crearTargets(rutaFichero):
-        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", "/home/kali/Desktop/TFG-1/create-targets-from-host-list.gmp.py", "127.0.0.1:9392", rutaFichero]) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"
-        return idTargets
-
-        # Usar lo de abajo como script
-        '''
-            Ejemplo de como se lanza
-            >>> resp = gmp.create_target(name="TARGETNAME3", make_unique=True, hosts=listaTarget)
-            >> from gvm.xml import pretty_print
-            >>> pretty_print(resp)
-            <create_target_response status="201" status_text="OK, resource created" id="70b6b00c-88a4-410a-9f50-94c5ac0946a4"/>
-            
-            Tratando esta linea tienes que idTargets = 70b6b00c-88a4-410a-9f50-94c5ac0946a4
-
-            Otra forma de hacerlo segun la documentacion
-
-            res=gmp.create_target("Suspect Host", make_unique=True,hosts=listaTarget)
-            >>> target_id = res.xpath('@id')[0]
-
-
-            '''
-            
-
-        
+        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", "/home/kali/Desktop/TFG-1/create-targets-from-host-list.gmp.py", "127.0.0.1:9392", rutaFichero],capture_output=True,text=True) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"       
+        listaIDs = proceso.stdout.splitlines()        
+        return listaIDs #Devuelve la lista con los IDs de los targets creados    
     
     def crearTask(idTargets):
 

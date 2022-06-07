@@ -60,15 +60,16 @@ def load_host_list(host_file):
 
 
 def send_targets(gmp, host_name, host_file, host_list):
-    print(f'\nSending targets from {host_file} to {host_name}...')
-
+    #print(f'\nSending targets from {host_file} to {host_name}...')
+    
     for host in host_list:
         name = f"Target for {host}"
         comment = f"Created: {time.strftime('%Y/%m/%d-%H:%M:%S')}"
         hosts = [host]
 
-        gmp.create_target(name=name, comment=comment, hosts=hosts, port_list_id="33d0cd82-57c6-11e1-8ed1-406186ea4fc5") #El port_list_id es obligatorio y es el de la IANA
-
+        res = gmp.create_target(name=name, comment=comment, hosts=hosts, port_list_id="33d0cd82-57c6-11e1-8ed1-406186ea4fc5") #El port_list_id es obligatorio y es el de la IANA
+        target_id = res.xpath('@id')[0] #Con esto saco el id para guardarlo despues
+        print(target_id)
 
 def main(gmp: Gmp, args: Namespace) -> None:
     # pylint: disable=undefined-variable
@@ -81,7 +82,7 @@ def main(gmp: Gmp, args: Namespace) -> None:
     hostlist = load_host_list(hostfile)
     send_targets(gmp, hostname, hostfile, hostlist)
 
-    print('\n  Target(s) created!\n')
+    #print('\n  Target(s) created!\n')
 
 
 if __name__ == '__gmp__':

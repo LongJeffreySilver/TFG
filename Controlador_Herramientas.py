@@ -43,8 +43,8 @@ class Controlador_Herramientas:
 
     def analisisDeRiesgos(ficheroListaIPs):
         greenBone = GreenBone()
-        #¿Lanzar gvm-start? Mirar si lo tengo que lanzar antes o si directamente se me conecta solo al usar la api
-
+        #Lanzar el servicio
+        subprocess.run(["sudo", "gvm-start"])
         #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos
         proceso = subprocess.run(["whoami"],capture_output=True,text=True)
         whoami = proceso.stdout.splitlines()
@@ -60,4 +60,6 @@ class Controlador_Herramientas:
 
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
+        #Parar el servicio
+        subprocess.run(["sudo", "gvm-stop"])
         return informe

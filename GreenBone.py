@@ -14,11 +14,11 @@ class GreenBone:
         a
 
     def crearTargets(rutaFichero):
-        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", "/home/kali/Desktop/TFG-1/create-targets-from-host-list.gmp.py", "127.0.0.1:9392", rutaFichero],capture_output=True,text=True) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"       
-        listaIDs = proceso.stdout.splitlines()        
-        return listaIDs #Devuelve la lista con los IDs de los targets creados    
+        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", "/home/kali/Desktop/TFG-1/create-targets-from-host-list.gmp.py", rutaFichero],capture_output=True,text=True) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"       
+        idTarget = proceso.stdout.splitlines()        
+        return idTarget #Devuelve el id del target que tiene todas las IPs dentro  
     
-    def crearTask(idTargets):
+    def crearTask(idTarget):
 
         '''
         Segun la documentacion hay que sacar el id de la configuracion
@@ -36,11 +36,15 @@ class GreenBone:
 
         Por ultimo se puede crear la task
 
-        res=gmp.create_task(name="Scan Suspect Host",config_id=configuracion_id ,scanner_id="08b69003-5fc2-4037-a479-93b440211c73", target_id=idTargets)
+        res=gmp.create_task(name="Scan Suspect Host",config_id=daba56c8-73ec-11df-a475-002264764cea ,scanner_id="08b69003-5fc2-4037-a479-93b440211c73", target_id=idTargets)
         >>> idTask = res.xpath('@id')[0]
 
 
         '''
+
+        proceso = subprocess.run(["gvm-script", "--gmp-username", "admin", "--gmp-password", "8e3898cc-8bce-4506-898f-e5904b317c55", "socket", 
+        "/home/kali/Desktop/TFG-1/create_task.py", idTarget],capture_output=True,text=True)
+        idTask = proceso.stdout.splitlines()
         return idTask
 
     def lanzarTask(idTask):

@@ -40,7 +40,7 @@ def check_args(args):
         print(message)
         sys.exit()
 
-def create_task(gmp, idTargets):
+def send_command(gmp, idTargets):
     name = f"Automatic task: {time.strftime('%Y/%m/%d-%H:%M:%S')}"
     
     res = gmp.create_task(name=name,config_id="daba56c8-73ec-11df-a475-002264764cea" ,scanner_id="08b69003-5fc2-4037-a479-93b440211c73", target_id=idTargets)
@@ -54,9 +54,9 @@ def main(gmp: Gmp, args: Namespace) -> None:
 
     idTargets = args.script[1]
 
-    create_task(gmp, idTargets)
+    send_command(gmp, idTargets)
 
-    #print('\n  Target(s) created!\n')
+
 
 
 if __name__ == '__gmp__':

@@ -59,7 +59,7 @@ def load_host_list(host_file):
     return host_list
 
 
-def send_targets(gmp, host_list):
+def send_command(gmp, host_list):
 
     name = f"Automatic target list"
     comment = f"Created: {time.strftime('%Y/%m/%d-%H:%M:%S')}"
@@ -76,7 +76,7 @@ def main(gmp: Gmp, args: Namespace) -> None:
     hostfile = args.script[1]
 
     hostlist = load_host_list(hostfile)
-    send_targets(gmp, hostlist)
+    send_command(gmp, hostlist)
 
 if __name__ == '__gmp__':
     main(gmp, args)

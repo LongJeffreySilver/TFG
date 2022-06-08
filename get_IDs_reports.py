@@ -24,35 +24,16 @@ from gvm.protocols.gmp import Gmp
 from gvmtools.helper import error_and_exit
 
 
-def check_args(args):
-    len_args = len(args.script) - 1
-    if len_args != 1:
-        message = """
-        Launching the task according to the ID passed as a parameter \
-
-        One parameter after the script name is required.
-
-        1. <task_id>        -- ID of the task (String)
-
-        Example: gvm-script --gmp-username <user> --gmp-password <pass> socket /home/kali/Desktop/start_task.py <task_id>
-
-        """
-        print(message)
-        sys.exit()
-
-def send_command(gmp, idTask):    
-    res = gmp.start_task(idTask)
+def send_command(gmp):    
+    res = gmp.get_reports()
     #idReport = res.xpath('@id')[0] #Con esto saco el id del reporte para guardarlo despues
-    #print(idReport)
+    print(res) # Me devuelve eso -> ['<Element get_reports_response at 0x7fb792f53ec0>'], pero no puedo cogerlo con el [0]. Puede ser que tenga que
+    #el ID al lanzar la task
 
 def main(gmp: Gmp, args: Namespace) -> None:
     # pylint: disable=undefined-variable
 
-    check_args(args)
-
-    idTask = args.script[1]
-
-    send_command(gmp, idTask)
+    send_command(gmp)
 
 if __name__ == '__gmp__':
-    main(gmp, args)
+    main(gmp,args)

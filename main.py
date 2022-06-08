@@ -3,14 +3,13 @@ from Controlador_extractor import Controlador_extractor
 from Controlador_ficheros import Controlador_ficheros
 from Generador_informe import Generador_informe
 from Controlador_Herramientas import Controlador_Herramientas
-from Valorador_riesgo import Valorador_riesgo
 
 #Creacion y gestion de rutas de ficheros y carpetas
 controladorFicheros = Controlador_ficheros()
 rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] matriz de riesgos
 
 #Lanzar el escaner de red cableado e inalambrico
-controladorHerramientas = Controlador_Herramientas
+controladorHerramientas = Controlador_Herramientas()
 ficherosEntrada = controladorHerramientas.escanearRed(rutasCarpetas[0])
 
 #Se rellenan la lista de IPs privadas en IPv4 e IPv6
@@ -38,8 +37,7 @@ rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs) #Escrib
 conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
-valoradorRiesgo = Valorador_riesgo()
-conjuntoTarget = valoradorRiesgo.valoracionRiesgo(conjuntoTarget,rutasCarpetas[2])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
+conjuntoTarget = controladorExtractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[2])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
 
 #Generar informe final en JSON
 informe = Generador_informe()

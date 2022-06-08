@@ -6,7 +6,7 @@ class Vulnerabilidad:
         self.hostname = mac
         self.nombreVulnerabiliad = nombreVulnerabiliad
         self.protocoloYpuerto = protocoloYpuerto
-        self.impacto = cvss#cvss
+        self.impacto = cvss
         self.severidad = severidad
         self.solucion = tipoSolucion + "\n" + "\t" + descripcionSolucion
         self.resultado = resultado

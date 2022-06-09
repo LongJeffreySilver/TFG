@@ -14,10 +14,13 @@ import time
 #ID del reporte hecho al router: 3bac7ea9-033d-47d9-91fd-c3d536ddfb0e
 #ID del reporte 1 del movris fbc04680-7006-4624-8f83-a7b9f71d50b3
 
-#Crear tarea
-proceso = subprocess.run(["find", "/", "-name", "TFG-1"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
-rutaScripst = proceso.stdout.splitlines()
-rutaScripst=rutaScripst[0].strip()
-rutaScripst = rutaScripst +"/Scripts/"
-print(rutaScripst)
+rutaFicherosEntrada = "/home/kali/Desktop"
 
+proceso = subprocess.run(["ip" ,"link" ,"|" ,"grep" ,"eth0", "-c"], capture_output=True,text=True) 
+
+procesoIP = subprocess.Popen(["ip" ,"link"], stdout=subprocess.PIPE)
+procesoGrep = subprocess.Popen(('grep', "eth0", "-c"), stdin=procesoIP.stdout, stdout=subprocess.PIPE,text=True)
+procesoIP.wait()
+salida = procesoGrep.communicate()
+salida = salida[0].strip()
+print(salida)

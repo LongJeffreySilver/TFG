@@ -20,8 +20,15 @@ controladorFicheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
 #Se crea un conjunto de target (IP,MAC,Version) con los 2 ficheros de entradas de herramientas diferentes
 controladorExtractor = Controlador_extractor()
 conjuntoTarget = set()
-conjuntoTarget = controladorExtractor.rellenarListaTargetEttercap(listaIPPrivadas, ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
-conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
+
+if ficherosEntrada[0] != -1:
+    conjuntoTarget = controladorExtractor.rellenarListaTargetEttercap(listaIPPrivadas, ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
+if ficherosEntrada[1] != -1:
+    conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
+
+if ficherosEntrada[0] == -1 and ficherosEntrada[1] == -1:
+    print("No hay ninguna interfaz conectada.")
+    exit()
 
 #Para no ocupar espacio y que se acumulenb siempre ficheros, se van a ir borrando que ya no se utilizan
 controladorFicheros.borrarFichero(ficherosEntrada[0])

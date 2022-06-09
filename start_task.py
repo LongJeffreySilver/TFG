@@ -42,8 +42,8 @@ def check_args(args):
 
 def send_command(gmp, idTask):    
     res = gmp.start_task(idTask)
-    #idReport = res.xpath('@id')[0] #Con esto saco el id del reporte para guardarlo despues
-    #print(idReport)
+    idReport = res[0].text
+    print(idReport)
 
 def main(gmp: Gmp, args: Namespace) -> None:
     # pylint: disable=undefined-variable

@@ -26,7 +26,7 @@ from gvmtools.helper import error_and_exit
 
 def check_args(args):
     len_args = len(args.script) - 1
-    if len_args != 1:
+    if len_args != 2:
         message = """
         This script takes the id of a target and creates a task with it to be launched \
 
@@ -40,8 +40,8 @@ def check_args(args):
         print(message)
         sys.exit()
 
-def send_command(gmp, idTargets):
-    name = f"Automatic task: {time.strftime('%Y/%m/%d-%H:%M:%S')}"
+def send_command(gmp, idTargets,name):
+    #name = f"Automatic task {time.strftime('%Y/%m/%d-%H:%M:%S')}"
     
     res = gmp.create_task(name=name,config_id="daba56c8-73ec-11df-a475-002264764cea" ,scanner_id="08b69003-5fc2-4037-a479-93b440211c73", target_id=idTargets)
     idTask = res.xpath('@id')[0] #Con esto saco el id de las task para guardarlo despues
@@ -53,8 +53,8 @@ def main(gmp: Gmp, args: Namespace) -> None:
     check_args(args)
 
     idTargets = args.script[1]
-
-    send_command(gmp, idTargets)
+    name = args.script[2]
+    send_command(gmp, idTargets,name)
 
 
 

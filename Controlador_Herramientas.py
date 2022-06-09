@@ -53,13 +53,13 @@ class Controlador_Herramientas:
         #lanzar un script por cada llamada a una funcion                
         
         idTargets = greenBone.crearTargets(ficheroListaIPs)
-        idTask = greenBone.crearTask(idTargets)
-        greenBone.lanzarTask(idTask)
-        informe = greenBone.descargarReporte() #devolver la ruta del fichero CSV si ha habido exito
-        greenBone.borrarTargets(idTargets) #Se borran para no ocupar espacio en cada analisis
+        idTask, nombreTask = greenBone.crearTask(idTargets)
+        idReport = greenBone.lanzarTask(idTask)
+        rutaInforme = greenBone.descargarReporte(idReport,nombreTask) 
+        #greenBone.borrarTargets(idTargets)
 
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         #Parar el servicio
         subprocess.run(["sudo", "gvm-stop"])
-        return informe
+        return rutaInforme

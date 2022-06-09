@@ -6,7 +6,7 @@ from Controlador_Herramientas import Controlador_Herramientas
 
 #Creacion y gestion de rutas de ficheros y carpetas
 controladorFicheros = Controlador_ficheros()
-rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] matriz de riesgos
+rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] Informes
 
 #Lanzar el escaner de red cableado e inalambrico
 controladorHerramientas = Controlador_Herramientas()

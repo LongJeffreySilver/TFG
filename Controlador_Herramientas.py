@@ -51,9 +51,10 @@ class Controlador_Herramientas:
         proceso = subprocess.run(["sudo", "usermod", "-a", "-G", "_gvm", whoami[0]])
 
         #Carpeta de los scripts
-        rutaScripst = ""
-        proceso = subprocess.run(["find", "/", "-name", "TFG"], stdout=rutaScripst,  stderr=subprocess.DEVNULL) #FIXME "TFG" es como se llame el proyecto de git
-        rutaScripst = rutaScripst +"/Script/"
+        proceso = subprocess.run(["find", "/", "-name", "TFG-1"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
+        rutaScripst = proceso.stdout.splitlines()
+        rutaScripst=rutaScripst[0].strip()
+        rutaScripst = rutaScripst +"/Scripts/"
 
         #lanzar un script por cada llamada a una funcion                
         
@@ -67,5 +68,5 @@ class Controlador_Herramientas:
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         #Parar el servicio
         subprocess.run(["sudo", "gvm-stop"])
-        
+
         return rutaInforme

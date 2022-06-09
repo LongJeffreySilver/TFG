@@ -3,7 +3,7 @@ import json
 
 class Generador_informe:
 
-    def generarInforme(self,conjuntoTarget,rutaSalida):
+    def generarInforme(self,conjuntoTarget,rutaInformeActual):
 
         informe = {}
 
@@ -32,5 +32,5 @@ class Generador_informe:
                 })
 
         #Guardar informe
-        with open(rutaSalida +'/Informe.json', 'w') as file:
+        with open(rutaInformeActual +'/Informe.json', 'w') as file:
             json.dump(informe, file, indent=4)

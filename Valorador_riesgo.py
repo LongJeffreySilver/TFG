@@ -52,7 +52,7 @@ class Valorador_riesgo:
             leyendaRoja = mpatches.Patch(color="red",label="Critico")
 
             plot.legend(handles=[leyendaAzul,leyendaAmarillo,leyendaMarron,leyendaRoja],loc="best") #Se coloca automaticamente en la mejor posicion sin cortar los datos
-            plot.savefig(rutaMatrizRiesgos + "Matriz de riesgos: " + mac + ";" + ip + ".png")
+            plot.savefig(rutaMatrizRiesgos + "/Matriz de riesgos: " + mac + ";" + ip + ".png")
             plot.close() #Limpia el grafico para que no se superponga cada vez que se pinta una matriz
 
     def valoracionRiesgo(self,conjuntoTarget,rutaMatrizRiesgos):

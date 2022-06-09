@@ -25,7 +25,7 @@ class Controlador_Herramientas:
         #Si no funciona bien esto, mirar la respuesta a este hilo https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
         proceso.wait()
         fichero.close()
-        self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
+        return self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
 
     def lanzarTcpdump(rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
         #tcpdump -qns 0 -e -r traza 

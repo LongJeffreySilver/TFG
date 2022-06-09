@@ -1,13 +1,7 @@
 import subprocess
 import time
 
-
 class GreenBone:
-    '''
-    FIXME
-    Hacer una carpeta para los scripts y cambiar la ruta en los comandos
-    '''
-
 
     def crearTargets(rutaFichero,rutaScripst,user,password):
         rutaScripst = rutaScripst + "create-targets-from-host-list.gmp.py"

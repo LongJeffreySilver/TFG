@@ -6,7 +6,7 @@ from Controlador_Herramientas import Controlador_Herramientas
 
 #Creacion y gestion de rutas de ficheros y carpetas
 controladorFicheros = Controlador_ficheros()
-rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida y [2] Informes
+rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual y [4] Matrices de riesgos del informe actual
 
 #Lanzar el escaner de red cableado e inalambrico
 controladorHerramientas = Controlador_Herramientas()
@@ -39,8 +39,8 @@ rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs,user,pas
 conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
-conjuntoTarget = controladorExtractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[2])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
+conjuntoTarget = controladorExtractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
 
 #Generar informe final en JSON
 informe = Generador_informe()
-informe.generarInforme(conjuntoTarget,rutasCarpetas[1])
+informe.generarInforme(conjuntoTarget,rutasCarpetas[3])

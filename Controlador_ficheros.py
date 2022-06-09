@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 
 class Controlador_ficheros:
@@ -91,20 +92,25 @@ class Controlador_ficheros:
     
     def creacionCarpetas():
         #Ruta actual
-        proceso = subprocess.run(["pwd"],capture_output=True,text=True)
-        pwd = proceso.stdout.splitlines()
+        proceso = subprocess.run(["find", "/", "-name", "TFG-1"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
+        rutaApp = proceso.stdout.splitlines()
+        rutaApp=rutaApp[0].strip()
 
-        #Creacion de nombres de ficheros
-        fichEntrada = pwd[0] + "/Ficheros_de_Entrada"
-        fichSalida = pwd[0] + "/Ficheros_de_Salida"
-        fichMatrices = pwd[0] + "/Matrices_de_Riesgos"
+        #Creacion de nombres de directorios
+        dirEntrada = rutaApp + "/Ficheros_de_Entrada"
+        dirSalida = rutaApp + "/Ficheros_de_Salida"
+        dirInformes = rutaApp + "/Informes"
+        dirInformeActual = dirInformes + "/Informe_"+ f"{time.strftime('%Y/%m/%d-%H:%M:%S')}"
+        dirMatricesRiesgos = dirInformeActual + "Matrices_de_riesgos"
 
         listaCreacion = list()
-        listaCreacion.append(fichEntrada)
-        listaCreacion.append(fichSalida)
-        listaCreacion.append(fichMatrices)
+        listaCreacion.append(dirEntrada)
+        listaCreacion.append(dirSalida)
+        listaCreacion.append(dirInformes)
+        listaCreacion.append(dirInformeActual) #Se crea siempre porque lleva marca de tiempo actual
+        listaCreacion.append(dirMatricesRiesgos)
 
-        #Por cada fichero se comprueba si existe. Si NO existe se crea
+        #Por cada directorio se comprueba si existe. Si NO existe se crea
         for fichero in listaCreacion:
             proceso = subprocess.run(['test', '-d', fichero]).returncode == 0 #0 si existe, !=0 si no
             if proceso: #Si no existe lo crea

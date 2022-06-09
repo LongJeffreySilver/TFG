@@ -41,7 +41,7 @@ class Controlador_Herramientas:
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
 
-    def analisisDeRiesgos(ficheroListaIPs):
+    def analisisDeRiesgos(ficheroListaIPs,user,password):
         greenBone = GreenBone()
         #Lanzar el servicio
         subprocess.run(["sudo", "gvm-start"])
@@ -49,17 +49,23 @@ class Controlador_Herramientas:
         proceso = subprocess.run(["whoami"],capture_output=True,text=True)
         whoami = proceso.stdout.splitlines()
         proceso = subprocess.run(["sudo", "usermod", "-a", "-G", "_gvm", whoami[0]])
- 
+
+        #Carpeta de los scripts
+        rutaScripst = ""
+        proceso = subprocess.run(["find", "/", "-name", "TFG"], stdout=rutaScripst,  stderr=subprocess.DEVNULL) #FIXME "TFG" es como se llame el proyecto de git
+        rutaScripst = rutaScripst +"/Script/"
+
         #lanzar un script por cada llamada a una funcion                
         
-        idTargets = greenBone.crearTargets(ficheroListaIPs)
-        idTask, nombreTask = greenBone.crearTask(idTargets)
-        idReport = greenBone.lanzarTask(idTask)
-        rutaInforme = greenBone.descargarReporte(idReport,nombreTask) 
+        idTargets = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
+        idTask, nombreTask = greenBone.crearTask(idTargets,rutaScripst,user,password)
+        idReport = greenBone.lanzarTask(idTask,rutaScripst,user,password)
+        rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password) 
         #greenBone.borrarTargets(idTargets)
 
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         #Parar el servicio
         subprocess.run(["sudo", "gvm-stop"])
+        
         return rutaInforme

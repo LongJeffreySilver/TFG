@@ -31,7 +31,9 @@ controladorFicheros.borrarFichero(ficherosEntrada[1])
 controladorFicheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
 ficheroListaIPs = controladorFicheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
 
-rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs) #Escribir ruta despues y devolver ruta del fichero CSV
+user = "admin" #args.script[1]
+password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
+rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
 
 #Se extrae la informacion del reporte CSV generado por Greenbone
 conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)

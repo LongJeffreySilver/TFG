@@ -40,7 +40,7 @@ ficheroListaIPs = controladorFicheros.escribirIPs(conjuntoTarget,rutasCarpetas[1
 
 user = "admin" #args.script[1]
 password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
-rutaInforme = controladorHerramientas.analisisDeRiesgos(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
+rutaInforme = controladorHerramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
 
 #Se extrae la informacion del reporte CSV generado por Greenbone
 conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)

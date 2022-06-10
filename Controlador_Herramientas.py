@@ -63,7 +63,7 @@ class Controlador_Herramientas:
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
         
-    def analisisDeRiesgos(ficheroListaIPs,user,password):
+    def analisisDeVulnerabilidades(ficheroListaIPs,user,password):
         greenBone = GreenBone()
         #Lanzar el servicio
         subprocess.run(["sudo", "gvm-start"])
@@ -80,8 +80,8 @@ class Controlador_Herramientas:
 
         #lanzar un script por cada llamada a una funcion                
         
-        idTargets = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
-        idTask, nombreTask = greenBone.crearTask(idTargets,rutaScripst,user,password)
+        idTarget = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
+        idTask, nombreTask = greenBone.crearTask(idTarget,rutaScripst,user,password)
         idReport = greenBone.lanzarTask(idTask,rutaScripst,user,password)
         rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password) 
         #greenBone.borrarTargets(idTargets)

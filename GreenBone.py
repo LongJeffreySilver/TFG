@@ -3,14 +3,14 @@ import time
 
 class GreenBone:
 
-    def crearTargets(rutaFichero,rutaScripst,user,password):
+    def crearTargets(self,rutaFichero,rutaScripst,user,password):
         rutaScripst = rutaScripst + "create-targets-from-host-list.gmp.py"
         proceso = subprocess.run(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket",
         rutaScripst, rutaFichero],capture_output=True,text=True) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"       
         idTarget = proceso.stdout.splitlines()        
-        return idTarget #Devuelve el id del target que tiene todas las IPs dentro  
+        return idTarget[0] #Devuelve el id del target que tiene todas las IPs dentro  
     
-    def crearTask(idTarget,rutaScripst,user,password):
+    def crearTask(self,idTarget,rutaScripst,user,password):
         rutaScripst = rutaScripst + "create_task.py"
         name = f"Automatic task {time.strftime('%Y/%m/%d-%H:%M:%S')}"
         proceso = subprocess.run(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
@@ -18,7 +18,7 @@ class GreenBone:
         idTask = proceso.stdout.splitlines()
         return idTask[0], name
 
-    def lanzarTask(idTask,rutaScripst,user,password):
+    def lanzarTask(self,idTask,rutaScripst,user,password):
         rutaScripst = rutaScripst + "start_task.py"
         proceso = subprocess.Popen(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
         rutaScripst, idTask], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
@@ -35,9 +35,9 @@ class GreenBone:
             rutaReporte = nombreTask + ".csv" #FIXME Añadir la ruta a la izquierda
             subprocess.Popen(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
             rutaScripst, idReport, rutaReporte])
-            return rutaReporte
+            return rutaReporte #FIXME NO such file or directory: nombreReporte Automaic task fecha.csv Yo creo que hay que añadir _ en vez de espacios
 
-    def comprobarEstadoReporte(nombreTask,rutaScripst,user,password):
+    def comprobarEstadoReporte(self,nombreTask,rutaScripst,user,password):
         #Comprueba cada 300 segundos = 5 minutos si la tarea ha concluido. Cuando termina, se devuelve True como comprobante
         rutaScripst = rutaScripst + "check-gmp.gmp.py"
         proceso = subprocess.run(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 

@@ -7,24 +7,25 @@ class Controlador_Herramientas:
 
     #Mirar esto https://askubuntu.com/questions/201544/how-to-run-a-file-with-sudo-without-a-password/201551#201551 para habilitar sudo sin contraseña
 
-    def analisisCableado(rutaFicherosEntrada): #sudo ettercap -Tqz -s 's(30)lqq' -i eth1 > /home/kali/Desktop/lista.txt 
+    def analisisCableado(self,rutaFicherosEntrada): #sudo ettercap -Tqz -s 's(30)lqq' -i eth1 > /home/kali/Desktop/lista.txt 
         
         #Confirmar si la interfaz cableada eth0 por defecto esta activa con: ip link | grep eth0 -c
         procesoIP = subprocess.Popen(["ip" ,"link"], stdout=subprocess.PIPE)
         procesoGrep = subprocess.Popen(('grep', "eth0", "-c"), stdin=procesoIP.stdout, stdout=subprocess.PIPE,text=True)
         procesoIP.wait()
         salida = procesoGrep.communicate()
-        salida = salida[0].strip()
-
-        if salida == 1:
+        #salida = salida[0].strip()
+        hayInterfaz = salida[0].split(sep="\n")
+        #hayInterfaz = aux[0]
+        if hayInterfaz[0] == "1":
             rutaFichero = rutaFicherosEntrada + "/Entrada_ettercap.txt"
             fichero = open(rutaFichero,"w")
-            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(300)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
+            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(30)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
             proceso.communicate()
             fichero.close()
             return rutaFichero
         else:
-            return -1 #codigo error porque no hay interfaz cableada
+            return "-1" #codigo error porque no hay interfaz cableada
 
     def analisisInalambrico(self,rutaFicherosEntrada):
         #Confirmar si la interfaz inalambrica eth0 por defecto esta activa con: ip link | grep wlan0 -c
@@ -32,9 +33,9 @@ class Controlador_Herramientas:
         procesoGrep = subprocess.Popen(('grep', "wlan0", "-c"), stdin=procesoIP.stdout, stdout=subprocess.PIPE,text=True)
         procesoIP.wait()
         salida = procesoGrep.communicate()
-        salida = salida[0].strip()
-        
-        if salida == 1:
+        #salida = salida[0].strip()
+        hayInterfaz = salida[0].split(sep="\n")
+        if hayInterfaz[0] == "1":
 
             #Ejecutar Kismet
             #Generar la traza para pasarsela a TCPdump
@@ -47,9 +48,9 @@ class Controlador_Herramientas:
             fichero.close()
             return self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
         else:
-            return -1 #codigo error porque no hay interfaz inalambrica
+            return "-1" #codigo error porque no hay interfaz inalambrica
 
-    def lanzarTcpdump(rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
+    def lanzarTcpdump(self,rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
         #tcpdump -qns 0 -e -r traza 
         #Genera un fichero para la salida de Kismet + Tcpdump
         rutaFichero = rutaFicherosEntrada + "/Entrada_tcpdump.txt"
@@ -59,14 +60,16 @@ class Controlador_Herramientas:
         return rutaFichero
 
     def escanearRed(self,rutaFicherosEntrada): #Ambos generan unos ficheros que se usan mas adelante
-        ficheroCableado = self.analisisCableado(rutaFicherosEntrada)
-        ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada)
+        ficheroCableado = self.analisisCableado(rutaFicherosEntrada=rutaFicherosEntrada)
+        ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada=rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
         
-    def analisisDeVulnerabilidades(ficheroListaIPs,user,password):
+    def analisisDeVulnerabilidades(self,ficheroListaIPs,user,password):
         greenBone = GreenBone()
         #Lanzar el servicio
-        subprocess.run(["sudo", "gvm-start"])
+        #FIXME Parece que necesita un ratito para lanzarse bien el servicio y no estoy seguro de si se necesita loguearse antes. 
+        #FIXME Tambien abre directamente el navegador
+        subprocess.run(["sudo", "gvm-start"],capture_output=True,text=True) 
         #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos
         proceso = subprocess.run(["whoami"],capture_output=True,text=True)
         whoami = proceso.stdout.splitlines()
@@ -83,7 +86,7 @@ class Controlador_Herramientas:
         idTarget = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
         idTask, nombreTask = greenBone.crearTask(idTarget,rutaScripst,user,password)
         idReport = greenBone.lanzarTask(idTask,rutaScripst,user,password)
-        rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password) 
+        rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password) #pasarle el sitio del reporte
         #greenBone.borrarTargets(idTargets)
 
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone

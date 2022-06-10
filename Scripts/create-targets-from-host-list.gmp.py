@@ -61,8 +61,8 @@ def load_host_list(host_file):
 
 def send_command(gmp, host_list):
 
-    name = f"Automatic target list"
-    comment = f"Created: {time.strftime('%Y/%m/%d-%H:%M:%S')}"
+    name = f"Automatic_target_list_{time.strftime('%Y/%m/%d-%H:%M')}"
+    comment = f"Created: {time.strftime('%Y/%m/%d-%H:%M')}"
     
     res = gmp.create_target(name=name, comment=comment, hosts=host_list, port_list_id="33d0cd82-57c6-11e1-8ed1-406186ea4fc5") #El port_list_id es obligatorio y es el de la IANA
     target_id = res.xpath('@id')[0] #Con esto saco el id del target para guardarlo despues

@@ -1,55 +1,65 @@
-
-from Controlador_extractor import Controlador_extractor
-from Controlador_ficheros import Controlador_ficheros
+from Controlador_ficheros import Controlador_Ficheros
 from Generador_informe import Generador_informe
+from  Controlador_extractor import Controlador_extractor
 from Controlador_Herramientas import Controlador_Herramientas
+from argparse import Namespace
+import sys
+
+#de main() -> None: #args: Namespace
 
 #Creacion y gestion de rutas de ficheros y carpetas
-controladorFicheros = Controlador_ficheros()
-rutasCarpetas = controladorFicheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual y [4] Matrices de riesgos del informe actual
+#Controlador_ficheros = Controlador_ficheros()
+print("Entro a creacion de carpetas")
+controlador_ficheros = Controlador_Ficheros()
+rutasCarpetas = controlador_ficheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual y [4] Matrices de riesgos del informe actual
+print("Carpetas creadas con exito")
 
 #Lanzar el escaner de red cableado e inalambrico
-controladorHerramientas = Controlador_Herramientas()
-ficherosEntrada = controladorHerramientas.escanearRed(rutasCarpetas[0])
+controlador_herramientas = Controlador_Herramientas()
+
+print("Se lanza el escaner")
+ficherosEntrada = controlador_herramientas.escanearRed(rutaFicherosEntrada=rutasCarpetas[0])
+print("Red escaneada con exito")
 
 #Se rellenan la lista de IPs privadas en IPv4 e IPv6
+print("Rellenando lista de IPs privadas")
 listaIPPrivadas = ["10.0","172.16","192.168","169.254"]
-controladorFicheros.rellenarListaPrivadaIPv4(listaIPPrivadas)
-controladorFicheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
 
+controlador_ficheros.rellenarListaPrivadaIPv4(listaIPPrivadas)
+controlador_ficheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
+print("Lista de IPs privadas rellena")
 #Se crea un conjunto de target (IP,MAC,Version) con los 2 ficheros de entradas de herramientas diferentes
-controladorExtractor = Controlador_extractor()
+controlador_extractor = Controlador_extractor()
 conjuntoTarget = set()
-
-if ficherosEntrada[0] != -1:
-    conjuntoTarget = controladorExtractor.rellenarListaTargetEttercap(listaIPPrivadas, ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
-if ficherosEntrada[1] != -1:
-    conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
-
-if ficherosEntrada[0] == -1 and ficherosEntrada[1] == -1:
+print("El valor de cableado es: " + ficherosEntrada[0] + " y el de inalambrico: " + ficherosEntrada[1])
+if ficherosEntrada[0] != "-1":
+    conjuntoTarget = controlador_extractor.rellenarListaTargetEttercap(listaIPPrivadas=listaIPPrivadas,rutaFicherosEntrada=ficherosEntrada[0]) #ficherosEntrada[0] contiene la ruta del fichero generado por Ettercap
+    print("Se procede a borrar el fichero cableado")
+    controlador_ficheros.borrarFichero(ficherosEntrada[0])
+if ficherosEntrada[1] != "-1":
+    conjuntoTarget = controlador_extractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
+    print("Se procede a borrar el fichero inalambrico")
+    controlador_ficheros.borrarFichero(ficherosEntrada[1])
+if ficherosEntrada[0] == "-1" and ficherosEntrada[1] == "-1":
     print("No hay ninguna interfaz de red conectada.")
-    exit()
-
+    sys.exit()
 #Para no ocupar espacio y que se acumulenb siempre ficheros, se van a ir borrando que ya no se utilizan
-controladorFicheros.borrarFichero(ficherosEntrada[0])
-controladorFicheros.borrarFichero(ficherosEntrada[1])
+
+
 
 #Se escribe el conjunto final en un fichero
-controladorFicheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
-ficheroListaIPs = controladorFicheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
-
+controlador_ficheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
+ficheroListaIPs = controlador_ficheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
 user = "admin" #args.script[1]
 password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
-rutaInforme = controladorHerramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
-
+rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
 #Se extrae la informacion del reporte CSV generado por Greenbone
-conjuntoTarget = controladorExtractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
-
+conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
 #Valoracion del riesgo y generacion de la matriz de riesgos
-conjuntoTarget = controladorExtractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
-
+conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
 #Generar informe final en JSON
-informe = Generador_informe()
-informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
-
-#Generar el main
+#Generador_informe = Generador_informe()
+Generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
+#Geerar el main
+#if__name__ == '__main__':
+#   main()#args

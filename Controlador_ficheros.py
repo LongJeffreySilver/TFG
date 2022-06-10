@@ -2,7 +2,7 @@ import subprocess
 import time
 
 
-class Controlador_ficheros:
+class Controlador_Ficheros:
    
     def ocho():
         return "8"
@@ -61,14 +61,14 @@ class Controlador_ficheros:
                 completo = basePrimero + segundo
                 listaIPPrivadas.append(completo)
 
-    def escribirFicheroTarget(conjuntoTarget,ruta):
+    def escribirFicheroTarget(self,conjuntoTarget,ruta):
         ficheroTarget = open(ruta + "/Conjunto_MAC;IP.txt",'w')
         for target in conjuntoTarget:
             ficheroTarget.write(target.mac + ";" + target.ip + "\n")
         ficheroTarget.close()
 
 
-    def escribirIPs(conjuntoTarget,nombreFichero):
+    def escribirIPs(self,conjuntoTarget,nombreFichero):
         nombreFichero += "/Conjunto_IP.txt"
         ficheroIP = open(nombreFichero,'w')
         for target in conjuntoTarget:
@@ -76,11 +76,11 @@ class Controlador_ficheros:
         ficheroIP.close()
         return nombreFichero
 
-    def borrarFichero(rutaFichero):
+    def borrarFichero(self,rutaFichero):
         #hacer la llamada a rm -f fichero
         proceso = subprocess.run(["rm", "-f",rutaFichero])
     
-    def creacionCarpetas():
+    def creacionCarpetas(self):
         #Ruta actual
         proceso = subprocess.run(["find", "/", "-name", "TFG"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
         rutaApp = proceso.stdout.splitlines()

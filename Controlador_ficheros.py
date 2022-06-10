@@ -61,16 +61,6 @@ class Controlador_ficheros:
                 completo = basePrimero + segundo
                 listaIPPrivadas.append(completo)
 
-    '''def abrirFichero(self,nombre,permiso): #w para escribir, r para leer y n si no se quiere permiso
-        if permiso == "n":
-            fichero = open(nombre)
-        else:
-            fichero = open(nombre,permiso)
-        return fichero'''
-    
-    '''def cerrarFichero(self,fichero):
-        fichero.close()'''
-
     def escribirFicheroTarget(conjuntoTarget,ruta):
         ficheroTarget = open(ruta + "/Conjunto_MAC;IP.txt",'w')
         for target in conjuntoTarget:
@@ -92,7 +82,7 @@ class Controlador_ficheros:
     
     def creacionCarpetas():
         #Ruta actual
-        proceso = subprocess.run(["find", "/", "-name", "TFG-1"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
+        proceso = subprocess.run(["find", "/", "-name", "TFG"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
         rutaApp = proceso.stdout.splitlines()
         rutaApp=rutaApp[0].strip()
 
@@ -100,8 +90,8 @@ class Controlador_ficheros:
         dirEntrada = rutaApp + "/Ficheros_de_Entrada"
         dirSalida = rutaApp + "/Ficheros_de_Salida"
         dirInformes = rutaApp + "/Informes"
-        dirInformeActual = dirInformes + "/Informe_"+ f"{time.strftime('%Y/%m/%d-%H:%M:%S')}"
-        dirMatricesRiesgos = dirInformeActual + "Matrices_de_riesgos"
+        dirInformeActual = dirInformes + "/Informe_"+ f"{time.strftime('%d.%m.%Y-%H:%M:%S')}"
+        dirMatricesRiesgos = dirInformeActual + "/Matrices_de_riesgos"
 
         listaCreacion = list()
         listaCreacion.append(dirEntrada)
@@ -113,6 +103,6 @@ class Controlador_ficheros:
         #Por cada directorio se comprueba si existe. Si NO existe se crea
         for fichero in listaCreacion:
             proceso = subprocess.run(['test', '-d', fichero]).returncode == 0 #0 si existe, !=0 si no
-            if proceso: #Si no existe lo crea
+            if proceso == False: #Si no existe lo crea
                 subprocess.run(["mkdir",fichero])
         return listaCreacion

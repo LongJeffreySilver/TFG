@@ -1,10 +1,5 @@
-
-
 import subprocess
 import time
-
-
-
 
 #ID del target 23642d44-06ba-4baf-9d69-4fde520407c8
 #ID del target router de casa: 81190589-10bd-481b-9bd5-a77ced63ff33
@@ -13,14 +8,3 @@ import time
 #ID de la task al movris: 869cfce7-e707-4e0d-9510-dc7c772ec405
 #ID del reporte hecho al router: 3bac7ea9-033d-47d9-91fd-c3d536ddfb0e
 #ID del reporte 1 del movris fbc04680-7006-4624-8f83-a7b9f71d50b3
-
-rutaFicherosEntrada = "/home/kali/Desktop"
-
-proceso = subprocess.run(["ip" ,"link" ,"|" ,"grep" ,"eth0", "-c"], capture_output=True,text=True) 
-
-procesoIP = subprocess.Popen(["ip" ,"link"], stdout=subprocess.PIPE)
-procesoGrep = subprocess.Popen(('grep', "eth0", "-c"), stdin=procesoIP.stdout, stdout=subprocess.PIPE,text=True)
-procesoIP.wait()
-salida = procesoGrep.communicate()
-salida = salida[0].strip()
-print(salida)

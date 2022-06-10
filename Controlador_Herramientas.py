@@ -6,7 +6,7 @@ from GreenBone import GreenBone
 class Controlador_Herramientas:
 
     #Mirar esto https://askubuntu.com/questions/201544/how-to-run-a-file-with-sudo-without-a-password/201551#201551 para habilitar sudo sin contraseña
-    #Poner aqui todo lo referente a los comandos de las herramientas
+
     def analisisCableado(rutaFicherosEntrada): #sudo ettercap -Tqz -s 's(30)lqq' -i eth1 > /home/kali/Desktop/lista.txt 
         
         #Confirmar si la interfaz cableada eth0 por defecto esta activa con: ip link | grep eth0 -c
@@ -19,7 +19,7 @@ class Controlador_Herramientas:
         if salida == 1:
             rutaFichero = rutaFicherosEntrada + "/Entrada_ettercap.txt"
             fichero = open(rutaFichero,"w")
-            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(30)lqq'", "-i", "eth0"], stdout=fichero) #Ojo porque hay que hacerlo con sudo
+            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(300)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
             proceso.communicate()
             fichero.close()
             return rutaFichero
@@ -27,19 +27,27 @@ class Controlador_Herramientas:
             return -1 #codigo error porque no hay interfaz cableada
 
     def analisisInalambrico(self,rutaFicherosEntrada):
-        #Confirmar si la interfaz inalambrica wlan0 por defecto esta activa con:  lsusb | grep wifi -> quiza hay que instalar lshw 
-
+        #Confirmar si la interfaz inalambrica eth0 por defecto esta activa con: ip link | grep wlan0 -c
+        procesoIP = subprocess.Popen(["ip" ,"link"], stdout=subprocess.PIPE)
+        procesoGrep = subprocess.Popen(('grep', "wlan0", "-c"), stdin=procesoIP.stdout, stdout=subprocess.PIPE,text=True)
+        procesoIP.wait()
+        salida = procesoGrep.communicate()
+        salida = salida[0].strip()
         
-        #Ejecutar Kismet
-        #Generar la traza para pasarsela a TCPdump
-        traza = rutaFicherosEntrada + "/Traza_kismet.pcap"
-        #kismet wlan0 generar_traza traza
-        fichero = open(traza,"w")
-        proceso = subprocess.Popen(["kismet", "wlan0", "comando para guardar traza", traza]) #NO hacerlo con sudo a poder ser
-        #Si no funciona bien esto, mirar la respuesta a este hilo https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
-        proceso.wait()
-        fichero.close()
-        return self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
+        if salida == 1:
+
+            #Ejecutar Kismet
+            #Generar la traza para pasarsela a TCPdump
+            traza = rutaFicherosEntrada + "/Traza_kismet.pcap"
+            #kismet wlan0 generar_traza traza
+            fichero = open(traza,"w")
+            proceso = subprocess.Popen(["kismet", "wlan0", "comando para guardar traza", traza]) #NO hacerlo con sudo
+            #Si no funciona bien esto, mirar la respuesta a este hilo https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
+            proceso.wait()
+            fichero.close()
+            return self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza
+        else:
+            return -1 #codigo error porque no hay interfaz inalambrica
 
     def lanzarTcpdump(rutaFicherosEntrada,traza): # No se usa la opcion tcp en el comando porque solo coge IPv4
         #tcpdump -qns 0 -e -r traza 
@@ -55,7 +63,6 @@ class Controlador_Herramientas:
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
         
-
     def analisisDeRiesgos(ficheroListaIPs,user,password):
         greenBone = GreenBone()
         #Lanzar el servicio
@@ -66,7 +73,7 @@ class Controlador_Herramientas:
         proceso = subprocess.run(["sudo", "usermod", "-a", "-G", "_gvm", whoami[0]])
 
         #Carpeta de los scripts
-        proceso = subprocess.run(["find", "/", "-name", "TFG-1"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
+        proceso = subprocess.run(["find", "/", "-name", "TFG"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git
         rutaScripst = proceso.stdout.splitlines()
         rutaScripst=rutaScripst[0].strip()
         rutaScripst = rutaScripst +"/Scripts/"

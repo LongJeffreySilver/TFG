@@ -27,7 +27,7 @@ if ficherosEntrada[1] != -1:
     conjuntoTarget = controladorExtractor.rellenarListaTargetTCPdump(listaIPPrivadas, conjuntoTarget, ficherosEntrada[1]) #ficherosEntrada[1] contiene la ruta del fichero generado por Tcpdump
 
 if ficherosEntrada[0] == -1 and ficherosEntrada[1] == -1:
-    print("No hay ninguna interfaz conectada.")
+    print("No hay ninguna interfaz de red conectada.")
     exit()
 
 #Para no ocupar espacio y que se acumulenb siempre ficheros, se van a ir borrando que ya no se utilizan
@@ -51,3 +51,5 @@ conjuntoTarget = controladorExtractor.valoracionRiesgo(conjuntoTarget,rutasCarpe
 #Generar informe final en JSON
 informe = Generador_informe()
 informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
+
+#Generar el main

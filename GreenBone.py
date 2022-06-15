@@ -28,14 +28,15 @@ class GreenBone:
         return idReport.strip()
 
     
-    def descargarReporte(self,idReport,nombreTask,rutaScripst,user,password):
+    def descargarReporte(self,idReport,nombreTask,rutaScripst,user,password,carpetaEntrada):
         reporteListo = self.comprobarEstadoReporte(nombreTask,rutaScripst,user,password)
         rutaScripst = rutaScripst + "get_report_csv.py"
         if reporteListo == True:
-            rutaReporte = nombreTask + ".csv" #FIXME Añadir la ruta a la izquierda
+            nombreReporte = "Reporte_greenbone"
+            rutaReporte = carpetaEntrada + "/" + nombreReporte + ".csv"
             subprocess.Popen(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
             rutaScripst, idReport, rutaReporte])
-            return rutaReporte #FIXME NO such file or directory: nombreReporte Automaic task fecha.csv Yo creo que hay que añadir _ en vez de espacios
+            return rutaReporte
 
     def comprobarEstadoReporte(self,nombreTask,rutaScripst,user,password):
         #Comprueba cada 300 segundos = 5 minutos si la tarea ha concluido. Cuando termina, se devuelve True como comprobante

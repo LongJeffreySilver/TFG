@@ -64,7 +64,7 @@ class Controlador_Herramientas:
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada=rutaFicherosEntrada)
         return [ficheroCableado,ficheroInalambrico]
         
-    def analisisDeVulnerabilidades(self,ficheroListaIPs,user,password):
+    def analisisDeVulnerabilidades(self,ficheroListaIPs,user,password,carpetaEntrada):
         greenBone = GreenBone()
         #Lanzar el servicio
         #FIXME Parece que necesita un ratito para lanzarse bien el servicio y no estoy seguro de si se necesita loguearse antes. 
@@ -86,7 +86,7 @@ class Controlador_Herramientas:
         idTarget = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
         idTask, nombreTask = greenBone.crearTask(idTarget,rutaScripst,user,password)
         idReport = greenBone.lanzarTask(idTask,rutaScripst,user,password)
-        rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password) #pasarle el sitio del reporte
+        rutaInforme = greenBone.descargarReporte(idReport,nombreTask,rutaScripst,user,password,carpetaEntrada) #pasarle el sitio del reporte
         #greenBone.borrarTargets(idTargets)
 
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone

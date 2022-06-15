@@ -58,8 +58,8 @@ def main(gmp: Gmp, args: Namespace) -> None:
     csv_report_format_id = "c1645568-627a-11e3-a660-406186ea4fc5" #ID del formato CSV
 
     response = gmp.get_report(
-        report_id=report_id, report_format_id=csv_report_format_id
-    )
+        report_id=report_id, report_format_id=csv_report_format_id,details=True,filter_string="levels=hml notes=1 rows=-1 overrides=1" 
+    )#FIXME Si algo falla, revisar el Filter_string
 
     report_element = response.find("report")
     # get the full content of the report element

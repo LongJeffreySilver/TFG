@@ -5,10 +5,10 @@ from Controlador_Herramientas import Controlador_Herramientas
 from argparse import Namespace
 import sys
 
-#de main() -> None: #args: Namespace
+#de main(args: Namespace) -> None:
 
 #Creacion y gestion de rutas de ficheros y carpetas
-#Controlador_ficheros = Controlador_ficheros()
+
 print("Entro a creacion de carpetas")
 controlador_ficheros = Controlador_Ficheros()
 rutasCarpetas = controlador_ficheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual y [4] Matrices de riesgos del informe actual
@@ -28,6 +28,7 @@ listaIPPrivadas = ["10.0","172.16","192.168","169.254"]
 controlador_ficheros.rellenarListaPrivadaIPv4(listaIPPrivadas)
 controlador_ficheros.rellenarListaPrivadaIPv6(listaIPPrivadas)
 print("Lista de IPs privadas rellena")
+
 #Se crea un conjunto de target (IP,MAC,Version) con los 2 ficheros de entradas de herramientas diferentes
 controlador_extractor = Controlador_extractor()
 conjuntoTarget = set()
@@ -50,16 +51,24 @@ if ficherosEntrada[0] == "-1" and ficherosEntrada[1] == "-1":
 #Se escribe el conjunto final en un fichero
 controlador_ficheros.escribirFicheroTarget(conjuntoTarget,rutasCarpetas[1]) #Fichero con la vinculacion MAC;IP actual
 ficheroListaIPs = controlador_ficheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
+
 user = "admin" #args.script[1]
 password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
-rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password) #Escribir ruta despues y devolver ruta del fichero CSV
+rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password,rutasCarpetas[0]) #Escribir ruta despues y devolver ruta del fichero CSV
+
 #Se extrae la informacion del reporte CSV generado por Greenbone
 conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
+
 #Valoracion del riesgo y generacion de la matriz de riesgos
 conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
+
 #Generar informe final en JSON
-#Generador_informe = Generador_informe()
-Generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
-#Geerar el main
+generador_informe = Generador_informe()
+generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
+
+#controlador_ficheros.borrarFichero(rutaInforme)
+
+
+#Generar el main
 #if__name__ == '__main__':
-#   main()#args
+#   main(args)#

@@ -56,8 +56,10 @@ user = "admin" #args.script[1]
 password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
 rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password,rutasCarpetas[0]) #Escribir ruta despues y devolver ruta del fichero CSV
 
+#rutaInforme = "/home/kali/Desktop/TFG/Ficheros_de_Entrada/Reporte_greenbone.csv"
+
 #Se extrae la informacion del reporte CSV generado por Greenbone
-conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutasCarpetas[0],rutaInforme)
+conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutaInforme)
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
 conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado

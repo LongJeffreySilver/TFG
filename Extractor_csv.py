@@ -18,10 +18,10 @@ class Extractor_csv:
         cadena = cadena.replace('\n', ' ')
         return cadena # self.traducir(cadena)
 
-    def extraerCVS(self,conjuntoTarget,rutaFicherosEntrada, rutaInforme): 
-        ficheroCSV = open(rutaFicherosEntrada + rutaInforme, "r") #"/Reporte_greenbone.csv"
+    def extraerCVS(self,conjuntoTarget,rutaInforme): 
+        ficheroCSV = open(rutaInforme, "r")
 
-        with ficheroCSV as csvfile: #El grande Dataset-Unicauca-Version2-87Atts.csv
+        with ficheroCSV as csvfile:
             reader = csv.DictReader(csvfile)
             for elemento in reader: #Recorrer el fichero por filas
                 ip = elemento['IP']

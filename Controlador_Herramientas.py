@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 from GreenBone import GreenBone
 
@@ -82,7 +83,8 @@ class Controlador_Herramientas:
         rutaScripst = rutaScripst +"/Scripts/"
 
         #lanzar un script por cada llamada a una funcion                
-        
+        time.sleep(60) #FIXME prueba durmiendo el proceso para esperar a que se lance Greenbone
+
         idTarget = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
         idTask, nombreTask = greenBone.crearTask(idTarget,rutaScripst,user,password)
         idReport = greenBone.lanzarTask(idTask,rutaScripst,user,password)
@@ -92,6 +94,6 @@ class Controlador_Herramientas:
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         #Parar el servicio
-        subprocess.run(["sudo", "gvm-stop"])
+        subprocess.run(["sudo", "gvm-stop"],capture_output=True,text=True)
 
         return rutaInforme

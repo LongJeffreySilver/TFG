@@ -12,8 +12,8 @@ class Controlador_extractor:
         self.valoradorRiesgo = Valorador_riesgo()
 
 
-    def extraerCVS(self,conjuntoTarget,rutaFicherosEntrada,rutaInforme):
-        return self.extractor_csv.extraerCVS(conjuntoTarget,rutaFicherosEntrada,rutaInforme)
+    def extraerCVS(self,conjuntoTarget,rutaInforme):
+        return self.extractor_csv.extraerCVS(conjuntoTarget,rutaInforme)
     
     def rellenarListaTargetEttercap(self,listaIPPrivadas, rutaFicherosEntrada):
         return self.extractor_ettercap.rellenarListaTargetEttercap(listaIPPrivadas, rutaFicherosEntrada)

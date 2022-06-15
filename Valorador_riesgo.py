@@ -24,7 +24,7 @@ class Valorador_riesgo:
     }
 
     def aplicarFormula(self, valorVulnerabilidad):
-        #implementar la formula
+        #valorCVSS = valorVulnerabilidad * 0.8
         return valorVulnerabilidad
 
     def revaluarSeveridad(self, valorVulneravilidad): #Estas valoraciones limite estan puestas a ojo sin ningun criterio

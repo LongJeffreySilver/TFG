@@ -1,25 +1,52 @@
 import subprocess
 import time
+#Crear el registro de este informe
 
-from GreenBone import GreenBone
 
-#ID del target 23642d44-06ba-4baf-9d69-4fde520407c8
-#ID del target router de casa: 81190589-10bd-481b-9bd5-a77ced63ff33
-#ID de la task: dcab29cd-d486-4be9-8fff-f812b2d32826
-#ID de la task al router: 0481b3a1-c945-4d02-ac02-f911fc359c04
-#ID de la task al movris: 869cfce7-e707-4e0d-9510-dc7c772ec405
-#ID del reporte hecho al router: 3bac7ea9-033d-47d9-91fd-c3d536ddfb0e
-#ID del reporte 1 del movris fbc04680-7006-4624-8f83-a7b9f71d50b3
 
-greenbone = GreenBone()
+'''
+Linea 1: Mac (conjunto target), num vulnerabilidades en ese informe (conjunto target)
+Resto de lineas: nombre vulnerabilidad, puerto y protocolo 
+'''
 
-#descargarReporte(self,idReport,nombreTask,rutaScripst,user,password,rutasCarpetas)
 
-idReport="a4a6c000-529a-4264-bc7d-27e67de852bb"
-nombreTask="Automatic_task_2022/06/10-14:46:02"
-rutaScripst="/home/kali/Desktop/TFG/Scripts/"
-user = "admin"
-password = "8e3898cc-8bce-4506-898f-e5904b317c55"
-rutasCarpetas = "/home/kali/Desktop/TFG/Carpeta_prueba"
-rutaReporte = greenbone.descargarReporte(idReport,nombreTask,rutaScripst,user,password,rutasCarpetas)
-print (rutaReporte)
+def crearRegistroVulnerabilidades(self,ruta,conjuntoTarget):
+
+    nombreFichero = ruta + f"Registro_vulnerabilidades_{time.strftime('%Y/%m/%d-%H:%M')}.txt"
+    ficheroVulnerabilidades = open(nombreFichero,'w')
+    for target in conjuntoTarget:
+        numVulnerabilidades = len(target.listaVulnerabilidades)
+        encabezado = target.mac + ";" + numVulnerabilidades + "\n"
+        ficheroVulnerabilidades.write(encabezado)
+        for vulnerabilidad in target.listaVulnerabilidades:
+            nombre = vulnerabilidad.nombreVulnerabiliad
+            protocoloYpuerto = vulnerabilidad.protocoloYpuerto
+            restoLineas = nombre + ";" + protocoloYpuerto + "\n"
+            ficheroVulnerabilidades.write(restoLineas)
+
+    ficheroVulnerabilidades.close()
+
+
+#Leer los registros anteriores
+
+#find carpeta_del_registro -type f -ctime -20
+def consultarRegistroVulnerabilidades(self,rutaRegistros,vulnerabilidad):
+
+    proceso = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True)
+    informes = proceso.stdout.splitlines()
+    contador_vulnerabilidad = 0
+    for rutaFichero in informes:  #Recorrer los informes de los ultimos 20 dias
+        fichero = open(rutaFichero,"r")
+        linea = fichero.readline()
+        while linea != "":
+            #SI grep con la MAC == ok ENTONCES
+                #Grep nombre vulnerabilidad + ; + protocoloYpuerto
+                #Si eso da bien, entonces contador_vulnerabilidad ++
+            #Sino coincide la MAC en el fichero
+                #break y a otro fichero
+
+
+
+            linea = fichero.readline()
+        
+        fichero.close()

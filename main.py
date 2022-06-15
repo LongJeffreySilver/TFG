@@ -61,6 +61,8 @@ rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIP
 #Se extrae la informacion del reporte CSV generado por Greenbone
 conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutaInforme)
 
+
+
 #Valoracion del riesgo y generacion de la matriz de riesgos
 conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
 
@@ -68,8 +70,12 @@ conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarp
 generador_informe = Generador_informe()
 generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
 
-#controlador_ficheros.borrarFichero(rutaInforme)
+'''
+Hacer el fichero de registro de vulnerabilidades:
 
+Linea 1: Mac (conjunto target), num vulnerabilidades en ese informe (conjunto target)
+Resto de lineas: nombre vulnerabilidad, puerto y protocolo 
+'''
 
 #Generar el main
 #if__name__ == '__main__':

@@ -68,7 +68,6 @@ class Controlador_Herramientas:
     def analisisDeVulnerabilidades(self,ficheroListaIPs,user,password,carpetaEntrada):
         greenBone = GreenBone()
         #Lanzar el servicio
-        #FIXME Parece que necesita un ratito para lanzarse bien el servicio y no estoy seguro de si se necesita loguearse antes. 
         #FIXME Tambien abre directamente el navegador
         subprocess.run(["sudo", "gvm-start"],capture_output=True,text=True) 
         #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos

@@ -1,5 +1,7 @@
 import subprocess
 import time
+#Antes hay que crear una carpeta para guardar todos los registros de vulnerabilidades
+
 #Crear el registro de este informe
 
 
@@ -29,24 +31,27 @@ def crearRegistroVulnerabilidades(self,ruta,conjuntoTarget):
 
 #Leer los registros anteriores
 
-#find carpeta_del_registro -type f -ctime -20
 def consultarRegistroVulnerabilidades(self,rutaRegistros,vulnerabilidad):
 
-    proceso = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True)
-    informes = proceso.stdout.splitlines()
+    procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los informes de los ultimos 20 dias
+    informes = procesoFind.stdout.splitlines()
     contador_vulnerabilidad = 0
     for rutaFichero in informes:  #Recorrer los informes de los ultimos 20 dias
         fichero = open(rutaFichero,"r")
         linea = fichero.readline()
-        while linea != "":
+        while linea != "": 
+            procesoGrepMac = subprocess.run(["grep", vulnerabilidad.hostname, fichero]).returncode == 0 #0 si existe, !=0 si no
             #SI grep con la MAC == ok ENTONCES
+            if procesoGrepMac == True:
+                vul = vulnerabilidad.nombreVulnerabiliad + ";" + vulnerabilidad.protocoloYpuerto
                 #Grep nombre vulnerabilidad + ; + protocoloYpuerto
-                #Si eso da bien, entonces contador_vulnerabilidad ++
-            #Sino coincide la MAC en el fichero
-                #break y a otro fichero
-
-
-
+                procesoGrepVul = subprocess.run(["grep", vul, fichero]).returncode == 0 #0 si existe, !=0 si no || FIXME Si no funciona, capar el espacio del final
+                if procesoGrepVul == True: #Hay repeticion de vulnerabilidad
+                    contador_vulnerabilidad+=1
+            else: #Si no coincide la MAC en el fichero no hay ni repeticion
+                fichero.close()
+                break
             linea = fichero.readline()
         
         fichero.close()
+    return contador_vulnerabilidad

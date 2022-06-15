@@ -21,5 +21,5 @@ class Controlador_extractor:
     def rellenarListaTargetTCPdump(self,listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada):
         return self.extractor_tcpdump.rellenarListaTargetTCPdump(listaIPPrivadas,conjuntoTarget,rutaFicherosEntrada)
 
-    def valoracionRiesgo(self,conjuntoTarget,rutaMatrizRiesgos):
-        return self.valoradorRiesgo.valoracionRiesgo(conjuntoTarget,rutaMatrizRiesgos)
+    def valoracionRiesgo(self,conjuntoTarget,rutaMatrizRiesgos,rutaRegistros):
+        return self.valoradorRiesgo.valoracionRiesgo(conjuntoTarget,rutaMatrizRiesgos,rutaRegistros)

@@ -24,7 +24,6 @@ class GreenBone:
         rutaScripst, idTask], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
         #Espera hasta que se ha lanzado por completo el comando y proporciona el id del reporte asociado a esa task
         idReport,err = proceso.communicate()
-        #errcode = proceso.returncode
         return idReport.strip()
 
     

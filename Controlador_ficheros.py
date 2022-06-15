@@ -92,6 +92,7 @@ class Controlador_Ficheros:
         dirInformes = rutaApp + "/Informes"
         dirInformeActual = dirInformes + "/Informe_"+ f"{time.strftime('%d.%m.%Y-%H:%M:%S')}"
         dirMatricesRiesgos = dirInformeActual + "/Matrices_de_riesgos"
+        dirRegistroVulnerabilidades = rutaApp + "/Registro_Vulnerabilidades"
 
         listaCreacion = list()
         listaCreacion.append(dirEntrada)
@@ -99,6 +100,7 @@ class Controlador_Ficheros:
         listaCreacion.append(dirInformes)
         listaCreacion.append(dirInformeActual) #Se crea siempre porque lleva marca de tiempo actual
         listaCreacion.append(dirMatricesRiesgos)
+        listaCreacion.append(dirRegistroVulnerabilidades)
 
         #Por cada directorio se comprueba si existe. Si NO existe se crea
         for fichero in listaCreacion:
@@ -106,3 +108,19 @@ class Controlador_Ficheros:
             if proceso == False: #Si no existe lo crea
                 subprocess.run(["mkdir",fichero])
         return listaCreacion
+
+    def crearRegistroVulnerabilidades(self,ruta,conjuntoTarget):
+
+        nombreFichero = ruta + "/" + f"Registro_vulnerabilidades_{time.strftime('%Y/%m/%d-%H:%M')}.txt"
+        ficheroVulnerabilidades = open(nombreFichero,'w')
+        for target in conjuntoTarget:
+            numVulnerabilidades = len(target.listaVulnerabilidades)
+            encabezado = target.mac + ";" + numVulnerabilidades + "\n"
+            ficheroVulnerabilidades.write(encabezado)
+            for vulnerabilidad in target.listaVulnerabilidades:
+                nombre = vulnerabilidad.nombreVulnerabiliad
+                protocoloYpuerto = vulnerabilidad.protocoloYpuerto
+                restoLineas = nombre + ";" + protocoloYpuerto + "\n"
+                ficheroVulnerabilidades.write(restoLineas)
+
+        ficheroVulnerabilidades.close()

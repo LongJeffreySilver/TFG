@@ -11,7 +11,7 @@ import sys
 
 print("Entro a creacion de carpetas")
 controlador_ficheros = Controlador_Ficheros()
-rutasCarpetas = controlador_ficheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual y [4] Matrices de riesgos del informe actual
+rutasCarpetas = controlador_ficheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual, [4] Matrices de riesgos del informe actual y [5] Registro de vulnerabilidades
 print("Carpetas creadas con exito")
 
 #Lanzar el escaner de red cableado e inalambrico
@@ -64,12 +64,12 @@ conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutaInforme)
 
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
-conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
+conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4],rutasCarpetas[5])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
 
 #Generar informe final en JSON
 generador_informe = Generador_informe()
 generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
-
+controlador_ficheros.crearRegistroVulnerabilidades(rutasCarpetas[5],conjuntoTarget)
 '''
 Hacer el fichero de registro de vulnerabilidades:
 

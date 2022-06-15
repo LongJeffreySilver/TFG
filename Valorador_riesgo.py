@@ -1,4 +1,5 @@
 from cProfile import label
+import subprocess
 import matplotlib.pyplot as plot
 import numpy as np
 import matplotlib.patches as mpatches
@@ -23,9 +24,41 @@ class Valorador_riesgo:
         "critico": rojo,
     }
 
-    def aplicarFormula(self, valorVulnerabilidad):
-        #valorCVSS = valorVulnerabilidad * 0.8
+    def aplicarFormula(self,rutaRegistros, vulnerabilidad):
+        valorCVSS = vulnerabilidad.impacto * 0.8
+        numRepeticiones = self.consultarRegistroVulnerabilidades(rutaRegistros,vulnerabilidad)
+        factorTiempo = 0
+        if numRepeticiones <= 20: #20 como numero de referencia en el que se hace al menos 1 analisis por dia
+            factorTiempo = numRepeticiones * 0.1
+        else: #Si satura por encima de 20 porque se han hecho mas de 20 analisis en 20 dias, entonces acotar a 2 puntos como maximo
+            factorTiempo = 2
+        valorVulnerabilidad = valorCVSS + factorTiempo
         return valorVulnerabilidad
+
+    def consultarRegistroVulnerabilidades(self,rutaRegistros,vulnerabilidad):
+        rutaRegistros = rutaRegistros + "/"
+        procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los informes de los ultimos 20 dias
+        informes = procesoFind.stdout.splitlines()
+        contador_vulnerabilidad = 0
+        for rutaFichero in informes:  #Recorrer los informes de los ultimos 20 dias
+            fichero = open(rutaFichero,"r")
+            linea = fichero.readline()
+            while linea != "": 
+                procesoGrepMac = subprocess.run(["grep", vulnerabilidad.hostname, fichero]).returncode == 0 #0 si existe, !=0 si no
+                #SI grep con la MAC == ok ENTONCES
+                if procesoGrepMac == True:
+                    vul = vulnerabilidad.nombreVulnerabiliad + ";" + vulnerabilidad.protocoloYpuerto
+                    #Grep nombre vulnerabilidad + ; + protocoloYpuerto
+                    procesoGrepVul = subprocess.run(["grep", vul, fichero]).returncode == 0 #0 si existe, !=0 si no || FIXME Si no funciona, capar el espacio del final
+                    if procesoGrepVul == True: #Hay repeticion de vulnerabilidad
+                        contador_vulnerabilidad+=1
+                else: #Si no coincide la MAC en el fichero no hay ni repeticion
+                    fichero.close()
+                    break
+                linea = fichero.readline()
+            
+            fichero.close()
+        return contador_vulnerabilidad
 
     def revaluarSeveridad(self, valorVulneravilidad): #Estas valoraciones limite estan puestas a ojo sin ningun criterio
         if valorVulneravilidad < 5.0:
@@ -55,7 +88,7 @@ class Valorador_riesgo:
             plot.savefig(rutaMatrizRiesgos + "/Matriz de riesgos: " + mac + ";" + ip + ".png")
             plot.close() #Limpia el grafico para que no se superponga cada vez que se pinta una matriz
 
-    def valoracionRiesgo(self,conjuntoTarget,rutaMatrizRiesgos):
+    def valoracionRiesgo(self,conjuntoTarget,rutaMatrizRiesgos,rutaRegistros):
 
         for target in conjuntoTarget:
             if len(target.listaVulnerabilidades) > 0: #Comprobar que ese target tiene al menos una vulnerabilidad en la lista
@@ -64,7 +97,7 @@ class Valorador_riesgo:
                 matrizY = list()
                 listaSeveridad = list()
                 for vulnerabilidad in target.listaVulnerabilidades:
-                    valorVulneravilidad = self.aplicarFormula(vulnerabilidad.impacto) 
+                    valorVulneravilidad = self.aplicarFormula(rutaRegistros, vulnerabilidad.impacto) 
                     vulnerabilidad.impacto = valorVulneravilidad #Cambio del impacto como riesgo
                     vulnerabilidad.severidad = self.revaluarSeveridad(float(valorVulneravilidad)) #Para saber si ha sido bajo, medio, alto o critico de forma cualitativa tambien
                     matrizX.append(numVulnerabilidad) #Se guarda la coordenada X como el numero de vulnerabilidad

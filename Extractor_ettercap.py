@@ -21,12 +21,19 @@ class Extractor_ettercap:
         ficheroEntrada = open(rutaFicherosEntrada,"r")
         linea = ficheroEntrada.readline()
         condicionHostList = 0
+        condicionSalto = 0;
         conjuntoTarget= set()
         
         while linea != "": #recorre hasta el final del fichero txt
             
-            if linea == "Closing text interface...\n":
-                condicionHostList = 0
+            #if linea == "Closing text interface...\n":
+            #    condicionHostList = 0
+            
+
+            if condicionHostList == 1 and linea == "\n":
+                condicionSalto += 1
+                if condicionSalto == 2:
+                    break
 
             if condicionHostList == 1 and linea != "\n":
             # 1)\t192.168.1.1\t98:97:D1:35:7B:D5\n

@@ -25,20 +25,32 @@ class Valorador_riesgo:
     }
 
     def aplicarFormula(self,rutaRegistros, vulnerabilidad):
-        valorCVSS = vulnerabilidad.impacto * 0.8
-        numRepeticiones = self.consultarRegistroVulnerabilidades(rutaRegistros,vulnerabilidad)
         factorTiempo = 0
-        if numRepeticiones <= 20: #20 como numero de referencia en el que se hace al menos 1 analisis por dia
-            factorTiempo = numRepeticiones * 0.1
-        else: #Si satura por encima de 20 porque se han hecho mas de 20 analisis en 20 dias, entonces acotar a 2 puntos como maximo
-            factorTiempo = 2
-        valorVulnerabilidad = valorCVSS + factorTiempo
-        return valorVulnerabilidad
+        impacto = int(vulnerabilidad.impacto)
+        numRepeticiones = self.consultarRegistroVulnerabilidades(rutaRegistros,vulnerabilidad)
+
+        if vulnerabilidad.severidad == "Critical":
+            if numRepeticiones <=10: 
+                resta = 10 - impacto
+                porcentaje = resta / 10
+                factorTiempo = porcentaje * numRepeticiones
+                valorVulnerabilidad = vulnerabilidad.cvss + factorTiempo
+            else:
+                valorVulnerabilidad = 10
+        else:
+            valorCVSS = impacto * 0.8
+            factorTiempo = 0
+            if numRepeticiones <= 20: #20 como numero de referencia en el que se hace al menos 1 analisis por dia
+                factorTiempo = numRepeticiones * 0.1
+            else: #Si satura por encima de 20 porque se han hecho mas de 20 analisis en 20 dias, entonces acotar a 2 puntos como maximo
+                factorTiempo = 2
+            valorVulnerabilidad = valorCVSS + factorTiempo
+        return str(valorVulnerabilidad)
 
     def consultarRegistroVulnerabilidades(self,rutaRegistros,vulnerabilidad):
         rutaRegistros = rutaRegistros + "/"
         procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los informes de los ultimos 20 dias
-        informes = procesoFind.stdout.splitlines()
+        informes = procesoFind.stdout.splitlines() #FIXME posiblemente pete aqui porque le llega un \n y eso luego no se puede abrir como fichero
         contador_vulnerabilidad = 0
         for rutaFichero in informes:  #Recorrer los informes de los ultimos 20 dias
             fichero = open(rutaFichero,"r")

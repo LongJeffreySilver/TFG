@@ -86,7 +86,7 @@ class Valorador_riesgo:
             plot.ylim(0,10) #El eje Y es el unico fijo
             for i in range(0,len(matrizX),1):
                 plot.scatter(matrizX[i],matrizY[i],marker="o",color=self.switchSeveridad.get(severidad[i])()) #cada vulnerabilidad se pinta segun su severidad
-            plot.xlabel("Numero de vulnerabilidad")
+            plot.xlabel("Numero de riesgo")
             plot.ylabel("Rango de 0 a 10")
             plot.title("Dispositivo: " + mac + ";" + ip)
             

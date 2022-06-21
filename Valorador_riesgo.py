@@ -29,7 +29,7 @@ class Valorador_riesgo:
         impacto = float(vulnerabilidad.impacto)
         numRepeticiones = self.consultarRegistroRiesgos(rutaRegistros,vulnerabilidad)
 
-        if vulnerabilidad.severidad == "Critical":
+        if impacto >= 9.0: #Riesgo considerado critico
             if numRepeticiones <=10: 
                 resta = 10 - impacto
                 porcentaje = resta / 10

@@ -52,7 +52,7 @@ class Valorador_riesgo:
         procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los registros de vulnerabilidades de los ultimos 20 dias
         registrosVulnerabilidades = procesoFind.stdout.splitlines()
         contador_vulnerabilidad = 0
-        if len(registrosVulnerabilidades) != 0: #FIXME controlar si no hay ficheros disponibles
+        if len(registrosVulnerabilidades) != 0: #FIXME Hay un problema real en los grep y es que puede cumplirse que coincida la mac, pero la misma vulnerabilidad este en otro dispositivo y no en el que ha salido
             for rutaFichero in registrosVulnerabilidades:  #Recorrer los registros vulnerabilidades de los ultimos 20 dias
                 fichero = open(rutaFichero,"r")
                 procesoGrepMac = subprocess.run(['grep', vulnerabilidad.hostname, rutaFichero],capture_output=True).returncode == 0 #0 si existe, !=0 si no
@@ -81,7 +81,7 @@ class Valorador_riesgo:
             plot.ylim(0,10) #El eje Y es el unico fijo
             for i in range(0,len(matrizX),1):
                 plot.scatter(matrizX[i],matrizY[i],marker="o",color=self.switchSeveridad.get(severidad[i])()) #cada vulnerabilidad se pinta segun su severidad
-            plot.xlabel("Numero de vulnerabilidad")
+            plot.xlabel("Numero de riesgo")
             plot.ylabel("Rango de 0 a 10")
             plot.title("Dispositivo: " + mac + ";" + ip)
             

@@ -14,8 +14,8 @@ class Generador_informe:
                 #Recorrer la lista de vulnerabilidades y hacer un diccionario con los datos de cada vulnerabilidad
                 for vulnerabilidad in target.listaVulnerabilidades:
                     dicVulnerabilidades[vulnerabilidad.nombreVulnerabiliad] = ({
-                        "Nombre de la vulnerabilidad" : vulnerabilidad.nombreVulnerabiliad,
-                        "Protocolo y puerto" : vulnerabilidad.protocoloYpuerto,
+                        "Nombre del riesgo" : vulnerabilidad.nombreVulnerabiliad,
+                        "Puerto y protocolo" : vulnerabilidad.protocoloYpuerto,
                         "Puntuacion" : vulnerabilidad.impacto,
                         "Severidad" : vulnerabilidad.severidad,
                         "Lista de CVEs" : vulnerabilidad.cves,
@@ -28,7 +28,7 @@ class Generador_informe:
                 informe[target.mac + ";" + target.ip] = ({
                     "MAC" : target.mac,
                     "IP" : target.ip,
-                    "Lista Vulnerabilidades": dicVulnerabilidades
+                    "Lista riesgos": dicVulnerabilidades
                 })
 
         #Guardar informe

@@ -44,7 +44,7 @@ if ficherosEntrada[1] != "-1":
 if ficherosEntrada[0] == "-1" and ficherosEntrada[1] == "-1":
     print("No hay ninguna interfaz de red conectada.")
     sys.exit()
-#Para no ocupar espacio y que se acumulenb siempre ficheros, se van a ir borrando que ya no se utilizan
+#Para no ocupar espacio y que se acumulen siempre ficheros, se van a ir borrando que ya no se utilizan
 
 
 
@@ -69,7 +69,7 @@ conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarp
 #Generar informe final en JSON
 generador_informe = Generador_informe()
 generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
-controlador_ficheros.crearRegistroVulnerabilidades(rutasCarpetas[5],conjuntoTarget)
+controlador_ficheros.crearRegistroRiesgos(rutasCarpetas[5],conjuntoTarget)
 '''
 Hacer el fichero de registro de vulnerabilidades:
 

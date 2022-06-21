@@ -26,15 +26,15 @@ class Valorador_riesgo:
 
     def aplicarFormula(self,rutaRegistros, vulnerabilidad):
         factorTiempo = 0
-        impacto = int(vulnerabilidad.impacto)
-        numRepeticiones = self.consultarRegistroVulnerabilidades(rutaRegistros,vulnerabilidad)
+        impacto = float(vulnerabilidad.impacto)
+        numRepeticiones = self.consultarRegistroRiesgos(rutaRegistros,vulnerabilidad)
 
         if vulnerabilidad.severidad == "Critical":
             if numRepeticiones <=10: 
                 resta = 10 - impacto
                 porcentaje = resta / 10
                 factorTiempo = porcentaje * numRepeticiones
-                valorVulnerabilidad = impacto + factorTiempo
+                valorVulnerabilidad = vulnerabilidad.cvss + factorTiempo
             else:
                 valorVulnerabilidad = 10
         else:
@@ -47,29 +47,24 @@ class Valorador_riesgo:
             valorVulnerabilidad = valorCVSS + factorTiempo
         return str(valorVulnerabilidad)
 
-    def consultarRegistroVulnerabilidades(self,rutaRegistros,vulnerabilidad):
+    def consultarRegistroRiesgos(self,rutaRegistros,vulnerabilidad):
         rutaRegistros = rutaRegistros + "/"
-        procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los informes de los ultimos 20 dias
-        informes = procesoFind.stdout.splitlines() #FIXME posiblemente pete aqui porque le llega un \n y eso luego no se puede abrir como fichero
+        procesoFind = subprocess.run(["find", rutaRegistros, "-type", "f", "-ctime" ,"-20"], capture_output=True,text=True) #Saca los registros de vulnerabilidades de los ultimos 20 dias
+        registrosVulnerabilidades = procesoFind.stdout.splitlines()
         contador_vulnerabilidad = 0
-        for rutaFichero in informes:  #Recorrer los informes de los ultimos 20 dias
-            fichero = open(rutaFichero,"r")
-            linea = fichero.readline()
-            while linea != "": 
-                procesoGrepMac = subprocess.run(["grep", vulnerabilidad.hostname, fichero]).returncode == 0 #0 si existe, !=0 si no
+        if len(registrosVulnerabilidades) != 0: #FIXME controlar si no hay ficheros disponibles
+            for rutaFichero in registrosVulnerabilidades:  #Recorrer los registros vulnerabilidades de los ultimos 20 dias
+                fichero = open(rutaFichero,"r")
+                procesoGrepMac = subprocess.run(['grep', vulnerabilidad.hostname, rutaFichero],capture_output=True).returncode == 0 #0 si existe, !=0 si no
                 #SI grep con la MAC == ok ENTONCES
                 if procesoGrepMac == True:
                     vul = vulnerabilidad.nombreVulnerabiliad + ";" + vulnerabilidad.protocoloYpuerto
                     #Grep nombre vulnerabilidad + ; + protocoloYpuerto
-                    procesoGrepVul = subprocess.run(["grep", vul, fichero]).returncode == 0 #0 si existe, !=0 si no || FIXME Si no funciona, capar el espacio del final
+                    procesoGrepVul = subprocess.run(['grep', vul, rutaFichero],capture_output=True).returncode == 0 #0 si existe, !=0 si no
                     if procesoGrepVul == True: #Hay repeticion de vulnerabilidad
                         contador_vulnerabilidad+=1
-                else: #Si no coincide la MAC en el fichero no hay ni repeticion
-                    fichero.close()
-                    break
-                linea = fichero.readline()
-            
-            fichero.close()
+                fichero.close()
+
         return contador_vulnerabilidad
 
     def revaluarSeveridad(self, valorVulneravilidad): #Estas valoraciones limite estan puestas a ojo sin ningun criterio
@@ -86,7 +81,7 @@ class Valorador_riesgo:
             plot.ylim(0,10) #El eje Y es el unico fijo
             for i in range(0,len(matrizX),1):
                 plot.scatter(matrizX[i],matrizY[i],marker="o",color=self.switchSeveridad.get(severidad[i])()) #cada vulnerabilidad se pinta segun su severidad
-            plot.xlabel("Numero de riesgo")
+            plot.xlabel("Numero de vulnerabilidad")
             plot.ylabel("Rango de 0 a 10")
             plot.title("Dispositivo: " + mac + ";" + ip)
             
@@ -109,7 +104,7 @@ class Valorador_riesgo:
                 matrizY = list()
                 listaSeveridad = list()
                 for vulnerabilidad in target.listaVulnerabilidades:
-                    valorVulneravilidad = self.aplicarFormula(rutaRegistros, vulnerabilidad.impacto) 
+                    valorVulneravilidad = self.aplicarFormula(rutaRegistros, vulnerabilidad) 
                     vulnerabilidad.impacto = valorVulneravilidad #Cambio del impacto como riesgo
                     vulnerabilidad.severidad = self.revaluarSeveridad(float(valorVulneravilidad)) #Para saber si ha sido bajo, medio, alto o critico de forma cualitativa tambien
                     matrizX.append(numVulnerabilidad) #Se guarda la coordenada X como el numero de vulnerabilidad

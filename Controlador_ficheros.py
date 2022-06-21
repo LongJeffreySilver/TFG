@@ -92,7 +92,7 @@ class Controlador_Ficheros:
         dirInformes = rutaApp + "/Informes"
         dirInformeActual = dirInformes + "/Informe_"+ f"{time.strftime('%d.%m.%Y-%H:%M:%S')}"
         dirMatricesRiesgos = dirInformeActual + "/Matrices_de_riesgos"
-        dirRegistroVulnerabilidades = rutaApp + "/Registro_Vulnerabilidades"
+        dirRegistroRiesgos = rutaApp + "/Registro_Riesgos"
 
         listaCreacion = list()
         listaCreacion.append(dirEntrada)
@@ -100,7 +100,7 @@ class Controlador_Ficheros:
         listaCreacion.append(dirInformes)
         listaCreacion.append(dirInformeActual) #Se crea siempre porque lleva marca de tiempo actual
         listaCreacion.append(dirMatricesRiesgos)
-        listaCreacion.append(dirRegistroVulnerabilidades)
+        listaCreacion.append(dirRegistroRiesgos)
 
         #Por cada directorio se comprueba si existe. Si NO existe se crea
         for fichero in listaCreacion:
@@ -109,18 +109,19 @@ class Controlador_Ficheros:
                 subprocess.run(["mkdir",fichero])
         return listaCreacion
 
-    def crearRegistroVulnerabilidades(self,ruta,conjuntoTarget):
+    def crearRegistroRiesgos(self,ruta,conjuntoTarget):
 
-        nombreFichero = ruta + "/" + f"Registro_vulnerabilidades_{time.strftime('%Y/%m/%d-%H:%M')}.txt"
+        nombreFichero = ruta + "/" + f"Registro_riesgos_{time.strftime('%d.%m.%Y-%H:%M:%S')}.txt"
         ficheroVulnerabilidades = open(nombreFichero,'w')
         for target in conjuntoTarget:
-            numVulnerabilidades = len(target.listaVulnerabilidades)
-            encabezado = target.mac + ";" + numVulnerabilidades + "\n"
-            ficheroVulnerabilidades.write(encabezado)
-            for vulnerabilidad in target.listaVulnerabilidades:
-                nombre = vulnerabilidad.nombreVulnerabiliad
-                protocoloYpuerto = vulnerabilidad.protocoloYpuerto
-                restoLineas = nombre + ";" + protocoloYpuerto + "\n"
-                ficheroVulnerabilidades.write(restoLineas)
+            if len(target.listaVulnerabilidades) > 0:
+                numVulnerabilidades = len(target.listaVulnerabilidades)
+                encabezado = target.mac + ";" + str(numVulnerabilidades) + "\n"
+                ficheroVulnerabilidades.write(encabezado)
+                for vulnerabilidad in target.listaVulnerabilidades:
+                    nombre = vulnerabilidad.nombreVulnerabiliad
+                    protocoloYpuerto = vulnerabilidad.protocoloYpuerto
+                    restoLineas = nombre + ";" + protocoloYpuerto + "\n"
+                    ficheroVulnerabilidades.write(restoLineas)
 
         ficheroVulnerabilidades.close()

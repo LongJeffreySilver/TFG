@@ -34,7 +34,7 @@ class Valorador_riesgo:
                 resta = 10 - impacto
                 porcentaje = resta / 10
                 factorTiempo = porcentaje * numRepeticiones
-                valorVulnerabilidad = vulnerabilidad.cvss + factorTiempo
+                valorVulnerabilidad = impacto + factorTiempo
             else:
                 valorVulnerabilidad = 10
         else:

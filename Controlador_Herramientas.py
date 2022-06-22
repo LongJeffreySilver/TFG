@@ -82,7 +82,7 @@ class Controlador_Herramientas:
         rutaScripst = rutaScripst +"/Scripts/"
 
         #lanzar un script por cada llamada a una funcion                
-        time.sleep(60) #FIXME prueba durmiendo el proceso para esperar a que se lance Greenbone
+        time.sleep(60) #Durmiendo el proceso para esperar a que se lance Greenbone
 
         idTarget = greenBone.crearTargets(ficheroListaIPs,rutaScripst,user,password)
         idTask, nombreTask = greenBone.crearTask(idTarget,rutaScripst,user,password)

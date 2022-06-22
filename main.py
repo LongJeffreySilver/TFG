@@ -55,7 +55,7 @@ ficheroListaIPs = controlador_ficheros.escribirIPs(conjuntoTarget,rutasCarpetas[
 user = "admin" #args.script[1]
 password = "8e3898cc-8bce-4506-898f-e5904b317c55" # args.script[2]
 rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password,rutasCarpetas[0]) #Escribir ruta despues y devolver ruta del fichero CSV
-
+print("Finalizado el analisis de vulnerabilidades")
 #rutaInforme = "/home/kali/Desktop/TFG/Ficheros_de_Entrada/Reporte_greenbone.csv"
 
 #Se extrae la informacion del reporte CSV generado por Greenbone
@@ -63,12 +63,12 @@ conjuntoTarget = controlador_extractor.extraerCVS(conjuntoTarget,rutaInforme)
 
 #Valoracion del riesgo y generacion de la matriz de riesgos
 conjuntoTarget = controlador_extractor.valoracionRiesgo(conjuntoTarget,rutasCarpetas[4],rutasCarpetas[5])#Retorna el conjuntoTarget modificado con el impacto y severidad actualizado
-
+print("Finalizada la valoracion de riesgos")
 #Generar informe final en JSON
 generador_informe = Generador_informe()
 generador_informe.generarInforme(conjuntoTarget,rutasCarpetas[3])
 controlador_ficheros.crearRegistroRiesgos(rutasCarpetas[5],conjuntoTarget)
-
+print("Informe creado con exito")
 #Generar el main
 #if__name__ == '__main__':
 #   main(args)#

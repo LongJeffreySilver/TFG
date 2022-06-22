@@ -75,7 +75,7 @@ class Valorador_riesgo:
         elif valorVulneravilidad < 9.0:
             return "alto"
         else:
-            return "Critico"
+            return "critico"
 
     def dibujarMatriz(self,matrizX,matrizY, mac, ip,severidad,rutaMatrizRiesgos):
             plot.ylim(0,10) #El eje Y es el unico fijo

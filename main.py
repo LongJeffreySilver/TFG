@@ -7,9 +7,7 @@ from argparse import Namespace
 import sys
 
 def main(args: Namespace) -> None:
-    argumento1 = args[1]
-    argumento2 = args[2]
-    print(argumento1 + " y " + argumento2)
+
     #Creacion y gestion de rutas de ficheros y carpetas
 
     print("Entro a creacion de carpetas")

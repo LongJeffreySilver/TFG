@@ -21,7 +21,7 @@ class Controlador_Herramientas:
         if hayInterfaz[0] == "1":
             rutaFichero = rutaFicherosEntrada + "/Entrada_ettercap.txt"
             fichero = open(rutaFichero,"w")
-            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(30)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
+            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(300)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
             proceso.communicate()
             fichero.close()
             return rutaFichero
@@ -44,7 +44,6 @@ class Controlador_Herramientas:
             #kismet wlan0 generar_traza traza
             fichero = open(traza,"w")
             proceso = subprocess.Popen(["kismet", "wlan0", "comando para guardar traza", traza]) #NO hacerlo con sudo
-            #Si no funciona bien esto, mirar la respuesta a este hilo https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
             proceso.wait()
             fichero.close()
             return self.lanzarTcpdump(rutaFicherosEntrada,traza) #Pasarle la ruta de la traza

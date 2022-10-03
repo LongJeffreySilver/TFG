@@ -10,7 +10,7 @@ def main(args: Namespace) -> None:
 
     #Creacion y gestion de rutas de ficheros y carpetas
 
-    print("Entro a creacion de carpetas")
+    print("Se procede a la creacion de carpetas")
     controlador_ficheros = Controlador_Ficheros()
     rutasCarpetas = controlador_ficheros.creacionCarpetas() # [0] entrada, [1] salida, [2] Informes, [3] Informe actual, [4] Matrices de riesgos del informe actual y [5] Registro de vulnerabilidades
     print("Carpetas creadas con exito")

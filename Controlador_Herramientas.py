@@ -73,14 +73,16 @@ class Controlador_Herramientas:
         return [ficheroCableado,ficheroInalambrico]
         
     def analisisDeVulnerabilidades(self,ficheroListaIPs,user,password,carpetaEntrada):
-        greenBone = GreenBone()
-        #Lanzar el servicio
-        #FIXME Tambien abre directamente el navegador
-        subprocess.run(["sudo", "gvm-start"],capture_output=True,text=True) 
         #Meter al usuario actual en el grupo _gvm para poder lanzar los comandos
         proceso = subprocess.run(["whoami"],capture_output=True,text=True)
         whoami = proceso.stdout.splitlines()
         proceso = subprocess.run(["sudo", "usermod", "-a", "-G", "_gvm", whoami[0]])
+        
+        greenBone = GreenBone()
+        #Lanzar el servicio
+        subprocess.run(["sudo", "gvm-start"],capture_output=True,text=True)
+        #Cambio de permisos del socket para que lo pueda utilizar el usuario
+        subprocess.run(["sudo", "chmod", "662", "/var/run/gvmd/gvmd.sock"])
 
         #Carpeta de los scripts
         proceso = subprocess.run(["find", "/", "-name", "TFG"], capture_output=True,text=True) #FIXME "TFG" es como se llame el proyecto de git

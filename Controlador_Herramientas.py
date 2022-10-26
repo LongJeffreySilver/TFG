@@ -6,19 +6,34 @@ from threading import Timer
 
 class Controlador_Herramientas:
 
-    #Mirar esto https://askubuntu.com/questions/201544/how-to-run-a-file-with-sudo-without-a-password/201551#201551 para habilitar sudo sin contraseña
+    def comprobarInterfaz(self,listaInterfazActual):
+        result = subprocess.run(["ls","/sys/class/net"], check=True, capture_output=True, text=True)
+        output = result.stdout.split('\n')
+  
+        interface = ""
+        for interface in output: #Wired: en (enps1, eno1 or ens1) and eth (eth0) | Wifi: wl (wlan wlp)
+            if (("en" in interface) or ("wl" in interface)  or ("eth" in interface)) and (len(interface) < 6):
+              
+                for interfazActual in listaInterfazActual:
 
-    def analisisCableado(self,rutaFicherosEntrada): #sudo ettercap -Tqz -s 's(30)lqq' -i eth1 > /home/kali/Desktop/lista.txt 
+                    if interfazActual in interface:
+                        rutaInterface = "/sys/class/net/" + interface + "/operstate"
+                        proceso = subprocess.Popen(["cat", rutaInterface], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
+                        salida,err = proceso.communicate()
+                        estadoInterfaz = salida.split(sep="\n")
+                        if estadoInterfaz[0] == "up":
+                            return interface                    
+        return "-1"
+
+    def analisisCableado(self,rutaFicherosEntrada): 
         
         #Si la conexion a eth0 es up, realiza el analisis. En caso de no existir o ser down, entonces no se realiza el analisis.
-        proceso = subprocess.Popen(["cat", "/sys/class/net/eth0/operstate"], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
-        salida,err = proceso.communicate()
-
-        estadoInterfaz = salida.split(sep="\n")
-        if estadoInterfaz[0] == "up":
+        listaInterfazActual = ["enp","eno","ens","eth"] #Tipos de redes cableadas
+        interfaz = self.comprobarInterfaz(listaInterfazActual)
+        if interfaz != "-1":
             rutaFichero = rutaFicherosEntrada + "/Entrada_ettercap.txt"
             fichero = open(rutaFichero,"w")
-            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(300)lqq'", "-i", "eth0"], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
+            proceso = subprocess.Popen(["sudo","ettercap", "-Tqz", "-s", "'s(300)lqq'", "-i", interfaz], stdout=fichero) #Se registran datos durante 5 minutos (300 segundos)
             proceso.communicate()
             fichero.close()
             return rutaFichero
@@ -27,22 +42,20 @@ class Controlador_Herramientas:
 
     def analisisInalambrico(self,rutaFicherosEntrada):
         #Si la conexion a wlan0 es up, realiza el analisis. En caso de no existir o ser down, entonces no se realiza el analisis.
-        proceso = subprocess.Popen(["cat", "/sys/class/net/wlan0/operstate"], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
-        salida,err = proceso.communicate()
-
-        estadoInterfaz = salida.split(sep="\n")
-        if estadoInterfaz[0] == "up":
-            return self.lanzarTcpdump(rutaFicherosEntrada) #Pasarle la ruta de la traza
+        listaInterfazActual = ["wlan","wlp"]
+        interfaz = self.comprobarInterfaz(listaInterfazActual)
+        if interfaz != "1":
+            return self.lanzarTcpdump(rutaFicherosEntrada,interfaz) #Pasarle la ruta de la traza
         else:
             return "-1" #codigo error porque no hay interfaz inalambrica
 
-    def lanzarTcpdump(self,rutaFicherosEntrada):
+    def lanzarTcpdump(self,rutaFicherosEntrada,interfaz):
         #Crea y rellena la traza de red inalambrica con tcpdump hasta que pasan 30 segundos.
         traza = rutaFicherosEntrada+ "/Traza_tcpdump.pcap"
         fichero = open(traza, "w")
         def kill(process): return process.kill()
 
-        proceso = subprocess.Popen(["sudo", "tcpdump", "-w", traza, "-i", "wlan0"])
+        proceso = subprocess.Popen(["sudo", "tcpdump", "-w", traza, "-i", interfaz])
 
         my_timer = Timer(300, kill, [proceso])
 
@@ -67,6 +80,7 @@ class Controlador_Herramientas:
         fichero.close()
 
         return rutaFichero
+    
     def escanearRed(self,rutaFicherosEntrada): #Ambos generan unos ficheros que se usan mas adelante
         ficheroCableado = self.analisisCableado(rutaFicherosEntrada=rutaFicherosEntrada)
         ficheroInalambrico = self.analisisInalambrico(rutaFicherosEntrada=rutaFicherosEntrada)

@@ -16,7 +16,7 @@ class Extractor_tcpdump:
                 return [ip,1]
         return ["",0]
   
-   def tratarIPv6(self,ip,mac,listaIPPrivadas,conjuntoTarget): #Para IPv6
+    def tratarIPv6(self,ip,mac,listaIPPrivadas,conjuntoTarget): #Para IPv6
         lineaPorPuntos = ip.split(sep='.')
         ipv6 = lineaPorPuntos[0] #Ya no tiene puerto
         ipCortada = ipv6.split(sep=':')

@@ -12,7 +12,7 @@ class Controlador_Herramientas:
   
         interface = ""
         for interface in output: #Wired: en (enps1, eno1 or ens1) and eth (eth0) | Wifi: wl (wlan wlp)
-            if (("en" in interface) or ("wl" in interface)  or ("eth" in interface)) and (len(interface) < 6):
+            if (("en" in interface) or ("wl" in interface)  or ("eth" in interface)) and (len(interface) < 8):
               
                 for interfazActual in listaInterfazActual:
 

@@ -54,7 +54,7 @@ def main(args: Namespace) -> None:
     ficheroListaIPs = controlador_ficheros.escribirIPs(conjuntoTarget,rutasCarpetas[1])# Fichero con la lista de IPs actual para Greenbone
 
     user = args[1] #"admin"
-    password = args[2] #"8e3898cc-8bce-4506-898f-e5904b317c55"
+    password = args[2] 
     rutaInforme = controlador_herramientas.analisisDeVulnerabilidades(ficheroListaIPs,user,password,rutasCarpetas[0]) #Escribir ruta despues y devolver ruta del fichero CSV
     print("Finalizado el analisis de vulnerabilidades")
     #rutaInforme = "/home/kali/Desktop/TFG/Ficheros_de_Entrada/Reporte_greenbone.csv"

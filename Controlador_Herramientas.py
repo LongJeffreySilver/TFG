@@ -44,7 +44,7 @@ class Controlador_Herramientas:
         #Si la conexion a wlan0 es up, realiza el analisis. En caso de no existir o ser down, entonces no se realiza el analisis.
         listaInterfazActual = ["wlan","wlp"]
         interfaz = self.comprobarInterfaz(listaInterfazActual)
-        if interfaz != "1":
+        if interfaz != "-1":
             return self.lanzarTcpdump(rutaFicherosEntrada,interfaz) #Pasarle la ruta de la traza
         else:
             return "-1" #codigo error porque no hay interfaz inalambrica
@@ -116,6 +116,6 @@ class Controlador_Herramientas:
         #Para mantener la seguridad eliminamos al usuario del grupo que puede ejecutar los comandos de Greenbone
         subprocess.run(["sudo", "gpasswd", "-d", whoami[0], "_gvm"])
         #Parar el servicio
-        subprocess.run(["sudo", "gvm-stop"],capture_output=True,text=True)
+        #subprocess.run(["sudo", "gvm-stop"],capture_output=True,text=True)
 
         return rutaInforme

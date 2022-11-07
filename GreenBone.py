@@ -7,7 +7,8 @@ class GreenBone:
         rutaScripst = rutaScripst + "create-targets-from-host-list.gmp.py"
         proceso = subprocess.run(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket",
         rutaScripst, rutaFichero],capture_output=True,text=True) #rutaFichero"/home/kali/Desktop/TFG-1/Ficheros_de_Salida/conjunto_IP.txt"       
-        idTarget = proceso.stdout.splitlines()        
+        idTarget = proceso.stdout.splitlines()
+        print("Target creado")        
         return idTarget[0] #Devuelve el id del target que tiene todas las IPs dentro  
     
     def crearTask(self,idTarget,rutaScripst,user,password):
@@ -16,6 +17,7 @@ class GreenBone:
         proceso = subprocess.run(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
         rutaScripst, idTarget, name],capture_output=True,text=True)
         idTask = proceso.stdout.splitlines()
+        print("Tarea creada")
         return idTask[0], name
 
     def lanzarTask(self,idTask,rutaScripst,user,password):
@@ -24,6 +26,7 @@ class GreenBone:
         rutaScripst, idTask], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
         #Espera hasta que se ha lanzado por completo el comando y proporciona el id del reporte asociado a esa task
         idReport,err = proceso.communicate()
+        print("Tarea lanzada")
         return idReport.strip()
 
     
@@ -31,10 +34,12 @@ class GreenBone:
         reporteListo = self.comprobarEstadoReporte(nombreTask,rutaScripst,user,password)
         rutaScripst = rutaScripst + "get_report_csv.py"
         if reporteListo == True:
+            print("Descargando el reporte de Greenbone")
             nombreReporte = "Reporte_greenbone"
             rutaReporte = carpetaEntrada + "/" + nombreReporte + ".csv"
             subprocess.Popen(["gvm-script", "--gmp-username", user, "--gmp-password", password, "socket", 
             rutaScripst, idReport, rutaReporte])
+            print("Reporte descargado con exito")
             return rutaReporte
 
     def comprobarEstadoReporte(self,nombreTask,rutaScripst,user,password):
